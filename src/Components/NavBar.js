@@ -1,8 +1,10 @@
 import React from "react";
+import { Link } from "react-router-dom";
+import { HashLink } from "react-router-hash-link";
 
 const NavBar = () => {
   return (
-    <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-holder">
+    <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-holder sticky-top">
       <div className="container-fluid">
         <a className="navbar-brand" href="#">
           <img
@@ -27,23 +29,32 @@ const NavBar = () => {
         <div className="collapse navbar-collapse" id="navbarCollapse">
           <ul className="navbar-nav me-auto mb-2 mb-md-0">
             <li className="nav-item">
-              <a className="nav-link active" aria-current="page" href="#home">
-                Home
-              </a>
+              <Link className="nav-link active" aria-current="page" to={"/"}>
+                <HashLink className="nav-link" to={"/#home"}>
+                  <span className="nav-span">Home</span>
+                </HashLink>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link" href="#">
-                Menu
-              </a>
+              <Link className="nav-link" to={"/menu"}>
+                <HashLink className="nav-link" to={"/menu"}>
+                  <span className="nav-span">A la Carta</span>
+                </HashLink>
+              </Link>
             </li>
             <li className="nav-item">
-              <a className="nav-link">Ordenar</a>
+              <Link className="nav-link" to={"/delivery"}>
+                <HashLink className="nav-link" to={"/delivery"}>
+                  <span className="nav-span">A la Casa</span>
+                </HashLink>
+              </Link>
             </li>
             <li className="nav-item">
-            <a className="nav-link" href="#about">Acerca de</a>
-
-              
-           
+              <Link className="nav-link" to={"/menu"}>
+                <HashLink className="nav-link" to={"/#about"}>
+                  <span className="nav-span">A Nosotros</span>
+                </HashLink>
+              </Link>
             </li>
           </ul>
         </div>

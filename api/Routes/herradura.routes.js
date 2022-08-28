@@ -8,21 +8,32 @@ const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const stripe = require("stripe")('sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp');
 
+const stripe = require("stripe")('sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp');
+const { Op } = require("sequelize");
 
 //Menu
 router.get("/menu", async (req, res) => {
   try {
-    const resp = await Menu.findAll({ where: { disponible: true } });
+    const resp = await Menu.findAll({ where: { disponible: true } }, );
     res.json(resp);
-    res.sendStatus(200);
+   
+    // res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir el menu: ${error}`);
-    res.sendStatus(400);
+    // res.sendStatus(400);
   }
 });
 
+//Destacados
+router.get("/destacados", async (req, res)=>{
+  try {
+    const resp = await Menu.findAll({where: {destacado: true,  precio: { [Op.gt]: 6}}, limit: 4})
+    res.send(resp)
+  } catch (error) {
+    console.log(error)
+  }
+})
 //Menu vegano
 router.get("/vegano", async (req, res) => {
   try {

@@ -1,34 +1,56 @@
-import React from "react";
+import axios from "axios";
+import React, { useEffect, useState } from "react";
 
 const News = () => {
+  const [data, setData] = useState([]);
+  const url = process.env.REACT_APP_APIURL;
+
+  const getData = async () => {
+    const resp = await axios.get(`${url}/destacados`);
+    setData(resp.data);
+  };
+
+  useEffect(() => {
+    getData();
+  }, []);
+
+const handleClick=(e) =>{
+
+  console.log(e.target.id)
+}
+
   return (
     <section id="news">
       <div className="container-fluid  news-holder mt-5 p-5 ">
         <div className="row">
-          <div className="col-lg-2 col-md-4 col-sm-12 card-news-holder">
-            <div className="card news-card">
-              <div className="card-body news-body">
-                <div className="container recuadro">
-                  <span className="dienesis-L">~</span>
-                  <img
-                    src="./img/herradura_logo.webp"
-                    alt="La Herradura Vinoteca Logo"
-                    className="news-logo"
-                  />
-                  <span className="dienesis-R">~</span>
-                  <img
-                    src=""
-                    alt="Platos nuevos"
-                    className="img-fluid news-img"
-                  />
-                  Lorem Ipsum dolor sit amet
-                  <br />
-                  consectetur adipiscing elit, sed do eiusmod tempor <br />
-                  --4.95€-- <br />
+          {data.map((item) => (
+            <div key={item.uid} className="col-lg-2 col-md-4 col-sm-12 card-news-holder" >
+            
+              <div className="card news-card">
+                <div className="card-body news-body" >
+                  <div className="container recuadro" value={item.uid} id={item.uid} onClick={e=>handleClick(e)}>
+                    <span className="dienesis-L">~</span>
+                    <img
+                      src="./img/herradura_logo.webp"
+                      alt="La Herradura Vinoteca Logo"
+                      className="news-logo"
+                    />
+                    <span className="dienesis-R">~</span>
+                    <img
+                      src=""
+                      alt="Platos nuevos"
+                      className="img-fluid news-img"
+                    />
+                    {item.plato}
+                    <br />
+                    {item.descripcion}
+                    <br />
+                    --{item.precio}€-- <br />
+                  </div>
                 </div>
               </div>
             </div>
-          </div>
+          ))}
         </div>
       </div>
     </section>

@@ -18,13 +18,12 @@
   display: none;
 }
 
-.navbar-holder{
+.navbar-holder {
   box-shadow: 0px 0px 10px 0.1px #b02235;
 }
 
-.navbar-toggler-icon{
+.navbar-toggler-icon {
   width: 1.5rem;
-  
 }
 
 .navbar-toggler {
@@ -55,7 +54,6 @@
   height: 15rem;
   flex-direction: column;
   justify-content: center;
-
 }
 
 .main-title {
@@ -82,6 +80,7 @@
   max-width: 211px;
   margin-left: auto;
   margin-right: auto;
+  margin-bottom: 3rem;
 }
 
 .news-holder {
@@ -113,6 +112,7 @@
   flex-direction: column;
   padding: 0.5rem 1rem;
   font-weight: bolder;
+  height: 25rem;
 }
 
 .dienesis-L {
@@ -151,10 +151,9 @@
 }
 .menu-carta,
 .menu-pedido {
-  
   display: flex;
   justify-content: center;
-  width: 250px;
+  width: 300px;
   height: 250px;
   background-size: cover;
   background-position: center;
@@ -163,30 +162,30 @@
 }
 
 .menu-carta:hover,
-.menu-pedido:hover{
+.menu-pedido:hover {
   cursor: pointer;
-  
+  box-shadow: 0px 0px 10px 0.1px #f7f7f7;
 }
 
-.menu-text{
+.menu-text {
   align-self: center;
-  background-color: #0000007b;
+  background-color: #000000a9;
   padding: 1rem;
   color: #fff9f9;
 }
+
+.menu-text:hover {
+  box-shadow: 0px 0px 10px 1px silver;
+}
 .menu-carta {
-  background-image: url("../../public/img/menu_sm300.jpg");
-}
-.menu-pedido {
-  background-image: url("../../public/img/delivery_sm300.jpg");
-}
-.footer-holder {
+  background-image: url("../../public/img/menu_sm3.jpg");
 }
 
-about_wrapper {
-  margin-bottom: 3rem;
-  margin-top: 10rem;
-  width: 70%;
+.menu-pedido {
+  background-image: url("../../public/img/delivery_sm2.jpg");
+}
+
+.footer-holder {
 }
 
 .about_Text {
@@ -210,6 +209,7 @@ about_wrapper {
   border-radius: 0.25rem;
 }
 
+.no-deco:hover,
 .about_Tel:hover {
   text-decoration: none;
   color: #631d1d;
@@ -217,6 +217,18 @@ about_wrapper {
   transition: all 0.3s linear;
   border-radius: 0.25rem;
   border-bottom: 1px solid #631d1d;
+}
+
+.no-deco:hover {
+  color: #f7f7f7;
+  border-bottom: 1px solid #f7f7f7;
+  padding: 0.5rem;
+}
+
+.no-deco {
+  text-decoration: none;
+  color: #f7f7f7;
+  padding: 0.5rem;
 }
 
 .about_Info {
