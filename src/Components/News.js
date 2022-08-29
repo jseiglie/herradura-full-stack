@@ -17,6 +17,7 @@ const News = () => {
 const handleClick=(e) =>{
 
   console.log(e.target.id)
+
 }
 
   return (
@@ -24,7 +25,7 @@ const handleClick=(e) =>{
       <div className="container-fluid  news-holder mt-5 p-5 ">
         <div className="row">
           {data.map((item) => (
-            <div key={item.uid} className="col-lg-2 col-md-4 col-sm-12 card-news-holder" >
+            <div key={item.uid} className="col-lg-2 col-md-6 col-sm-12 card-news-holder" >
             
               <div className="card news-card">
                 <div className="card-body news-body" >
@@ -40,12 +41,19 @@ const handleClick=(e) =>{
                       src=""
                       alt="Platos nuevos"
                       className="img-fluid news-img"
-                    />
+                    /><p  className="mt-4" style={{backgroundColor: "#00000010"}}>
+
                     {item.plato}
+                    </p>
+                    
+                    <p className="line-clamp" >
+                      {item.descripcion}
+                      </p>
                     <br />
-                    {item.descripcion}
-                    <br />
+                    <p className="footer-wrapper">
+
                     --{item.precio}€-- <br />
+                    </p>
                   </div>
                 </div>
               </div>

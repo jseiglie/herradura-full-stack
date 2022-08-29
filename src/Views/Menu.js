@@ -1,9 +1,20 @@
-import React from 'react'
+import React from "react";
 
 const Menu = () => {
-  return (
-    <div>Menu</div>
-  )
-}
+  // const [categories, setCategories] = useState([]);
+  // const [destacadosAll, setDestacadosall] = useState([]);
 
-export default Menu
+
+  const receiveData = async (data, url) => {
+  //funcion que recibe del hijo
+  }; 
+
+  return (
+    <>
+      {/* <GeneralLoad url={"destacadosall"} receiveData={receiveData} /> */}
+      {/* <GeneralLoad url={"menu"} /> */}
+    </>
+  );
+};
+
+export default Menu;

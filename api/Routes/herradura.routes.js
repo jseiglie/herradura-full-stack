@@ -9,16 +9,18 @@ const Categories = require("../Models/Categories");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 
-const stripe = require("stripe")('sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp');
+const stripe = require("stripe")(
+  "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
+);
 const { Op } = require("sequelize");
 
 //Menu
 router.get("/menu", async (req, res) => {
   try {
-    const resp = await Menu.findAll({ where: { disponible: true } }, );
+    const resp = await Menu.findAll({ where: { disponible: true } });
     res.json(resp);
-   
-    // res.sendStatus(200);
+
+    //
   } catch (error) {
     console.error(`Error al pedir el menu: ${error}`);
     // res.sendStatus(400);
@@ -26,20 +28,30 @@ router.get("/menu", async (req, res) => {
 });
 
 //Destacados
-router.get("/destacados", async (req, res)=>{
+router.get("/destacados", async (req, res) => {
   try {
-    const resp = await Menu.findAll({where: {destacado: true,  precio: { [Op.gt]: 6}}, limit: 4})
-    res.send(resp)
+    const resp = await Menu.findAll({
+      where: { destacado: true, precio: { [Op.gt]: 6 } },
+      limit: 4,
+    });
+    res.send(resp);
   } catch (error) {
-    console.log(error)
+    console.log(error);
   }
-})
+});
+router.get("/destacadosall", async (req, res) => {
+  try {
+    const resp = await Menu.findAll({ where: { destacado: true } });
+    res.send(resp);
+  } catch (error) {
+    console.log(error);
+  }
+});
 //Menu vegano
 router.get("/vegano", async (req, res) => {
   try {
     const resp = await Menu.findAll({ where: { vegano: true } });
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir el menu vegano: ${error}`);
     res.sendStatus(400);
@@ -52,7 +64,6 @@ router.post("addToMenu", async (req, res) => {
     const payload = req.body;
     await Menu.create(payload);
     res.json(payload);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir añadir al menu: ${error}`);
     res.sendStatus(400);
@@ -72,7 +83,6 @@ router.put("/modMenu/:id", async (req, res) => {
       disponible: disponible,
     });
     res.json({ msg: `Se ha modificado correctamente el plato: ${plato}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar el plato: ${error}`);
     res.sendStatus(400);
@@ -83,7 +93,6 @@ router.put("/modMenu/:id", async (req, res) => {
 router.patch("/menuDisponible/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al habilitar el plato: ${error}`);
     res.sendStatus(400);
@@ -107,22 +116,26 @@ router.delete("/delMenu/:id", async (req, res) => {
 //Categories
 router.get("/categories", async (req, res) => {
   try {
-    const resp = await Categories.findAll();
+    const resp = await Categories.findAll({ where: { delivery: true } });
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todas las categorías: ${error}`);
     res.sendStatus(400);
   }
 });
 
+//One Category
+router.get("/bycategory/:id", async (req, res) => {
+  const id = req.params.id;
+  const resp = await Menu.findAll({where: {id_catego2: id}})
+  res.send(resp)
+});
 //add catego
 router.post("addCategory", async (req, res) => {
   try {
     const payload = req.body;
     await Categories.create(payload);
     res.json(payload);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al añadir una categoría: ${error}`);
     res.sendStatus(400);
@@ -141,7 +154,6 @@ router.put("/editCategory/:id", async (req, res) => {
       { where: { id: id } }
     );
     res.json({ msg: "Se ha modificado correctamente la categoría" });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar una categoría: ${error}`);
     res.sendStatus(400);
@@ -156,7 +168,6 @@ router.delete("/delCategory/:id", async (req, res) => {
       where: { id: id },
     });
     res.json({ msg: "Se ha eliminado correctamente la categoría" });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al eliminar una categoría: ${error}`);
     res.sendStatus(400);
@@ -168,7 +179,6 @@ router.get("/allUsers", async (req, res) => {
   try {
     const resp = await User.findAll();
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todos los usuarios: ${error}`);
     res.sendStatus(400);
@@ -181,7 +191,6 @@ router.get("/oneUser/:id", async (req, res) => {
     const id = req.params.id;
     const resp = await User.findByPk(id);
     res.send(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir un usuario: ${error}`);
     res.sendStatus(400);
@@ -204,7 +213,6 @@ router.post("/register", async (req, res) => {
     });
 
     res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al registrar un usuario: ${error}`);
     res.sendStatus(400);
@@ -217,7 +225,6 @@ router.delete("/delUser/:id", async (req, res) => {
     const id = req.params.id;
     await User.destroy({ where: { id: id } });
     res.json({ msg: `Se ha eliminado correctamente el usuario con id: ${id}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al eliminar el usuario: ${error}`);
     res.sendStatus(400);
@@ -240,7 +247,6 @@ router.put("/modUser/:id", async (req, res) => {
       { where: { id: id } }
     );
     res.json({ msg: `Se ha modificado correctamente el usuario ${name}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar el usuario: ${error}`);
     res.sendStatus(400);
@@ -278,7 +284,6 @@ router.get("/purchases", async (req, res) => {
   try {
     const resp = await Purchases.findAll();
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todas las compras: ${error}`);
     res.sendStatus(400);
@@ -296,29 +301,25 @@ router.get("/purchasesByClient", async (req, res) => {
 //admin
 router.get("/admin", async (req, res) => {
   try {
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al acceder a la sección de admin: ${error}`);
     res.sendStatus(400);
   }
 });
 
-
-
-
 // router.post("/checkout", async (req, res) => {
 //   console.log("Request:", req.body);
- 
+
 //   let error;
 //   let status;
 //   try {
 //     const { product, token } = req.body;
- 
+
 //     const customer = await stripe.customers.create({
 //       email: token.email,
 //       source: token.id,
 //     });
- 
+
 //     const idempotency_key = uuid();
 //     const charge = await stripe.charges.create(
 //       {
@@ -348,10 +349,9 @@ router.get("/admin", async (req, res) => {
 //     console.error("Error:", error);
 //     status = "failure";
 //   }
- 
+
 //   res.json({ error, status });
 // });
-
 
 //stripe from web
 
@@ -378,8 +378,5 @@ router.post("/create-payment-intent", async (req, res) => {
     clientSecret: paymentIntent.client_secret,
   });
 });
-
-
-
 
 module.exports = router;
