@@ -29,6 +29,20 @@ const Dashboard = () => {
     setCatego(res.data);
   };
 
+  const handleclick = (e) => {
+    setSelected(e.target.id);
+  };
+
+const getOneCat = async (cat) =>{
+  const res = await axios.get(`${process.env.REACT_APP_APIURL}/bycategory/${cat}`)
+  console.log(res)
+}
+
+useEffect(()=>{
+  getOneCat(selected)
+  console.log(selected)
+},[selected])
+
   return (
     <div className="container-fluid dash-wrap">
       <div className="d-flex title-logout">
@@ -39,14 +53,20 @@ const Dashboard = () => {
         <div className="col-11">
           <div className="row cat-holder">
             <div className="col-2 cat-col ">
-              <span id="menu" className="cat-item">
+              <span id="menu" className="cat-item" onClick={e=>setSelected("menu")}>
                 Menu completo
               </span>
             </div>
             {catego &&
               catego.map((item, i) => (
-                <div id={item.uid} className="col-2 cat-col ">
-                  <span className="cat-item">{item.catego}</span>
+                <div key={i} className="col-2 cat-col">
+                  <span
+                    id={item.uid}
+                    className="cat-item"
+                    onClick={(e) => handleclick(e)}
+                  >
+                    {item.catego}
+                  </span>
                 </div>
               ))}
           </div>
