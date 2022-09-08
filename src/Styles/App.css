@@ -402,8 +402,7 @@ body::-webkit-scrollbar-thumb {
 }
 
 .title-logout{
-  justify-content: center;
-  
+  align-self: center;
 }
 
 .logout{
@@ -415,6 +414,7 @@ body::-webkit-scrollbar-thumb {
   background-color: #00000054;
   color: #f7f7f7;
   padding: 0.5rem;
+  
 }
 .cat-holder{
   align-items: center;
@@ -461,6 +461,10 @@ body::-webkit-scrollbar-thumb {
   padding: 0.3rem 0;
 }
 
+.table-head{
+  border-bottom: 1px solid #212529;
+  margin-bottom: 1rem;
+}
 /**
  * ----------------------------------------
  * animation scale-up-ver-center

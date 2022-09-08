@@ -45,7 +45,7 @@ useEffect(()=>{
 
   return (
     <div className="container-fluid dash-wrap">
-      <div className="d-flex title-logout">
+      <div className="d-flex title-logout w-50 ">
         <h1>Dashboard</h1>
         <button className="logout">Salir</button>
       </div>
@@ -85,7 +85,7 @@ useEffect(()=>{
         </div>
       </div>
 
-      <div className="row p-3 ">
+      <div className="row p-3 table-head">
         <div className="col-xl-5 col-lg-5 col-md-5 col-sm-5">Plato</div>
         <div className="col-xl-2 col-lg-2 col-md-2 col-sm-2">Categoria</div>
 
