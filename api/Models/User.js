@@ -5,15 +5,18 @@ const db = require("../Config/config");
 const User = db.define("User", {
   uid: {
     type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
   name: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
+    allowNull: true,
   },
   lastname: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
+    allowNull: true,
   },
   email: {
     type: Sequelize.STRING,
@@ -27,11 +30,13 @@ const User = db.define("User", {
   },
   address: {
     type: Sequelize.STRING,
-    allowNull: false,
+    defaultValue: "",
+    allowNull: true,
   },
   zip: {
     type: Sequelize.INTEGER,
-    allowNull: false,
+    defaultValue: 0,
+    allowNull: true,
   },
   admin: {
     type: Sequelize.BOOLEAN,

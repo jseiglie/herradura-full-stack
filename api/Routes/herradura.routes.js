@@ -8,6 +8,7 @@ const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
+const { validateToken } = require("../middlewares/authmiddleware");
 
 const stripe = require("stripe")(
   "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
@@ -127,8 +128,8 @@ router.get("/categories", async (req, res) => {
 //One Category
 router.get("/bycategory/:id", async (req, res) => {
   const id = req.params.id;
-  const resp = await Menu.findAll({where: {id_catego2: id}})
-  res.send(resp)
+  const resp = await Menu.findAll({ where: { id_catego2: id } });
+  res.send(resp);
 });
 //add catego
 router.post("addCategory", async (req, res) => {
@@ -197,27 +198,27 @@ router.get("/oneUser/:id", async (req, res) => {
   }
 });
 
-//add user
-router.post("/register", async (req, res) => {
-  try {
-    const { name, lastname, email, password, address, zip } = req.body;
-    bcrypt.hash(password, 8).then((hash) => {
-      User.create({
-        name: name,
-        lastname: lastname,
-        email: email,
-        password: hash,
-        address: address,
-        zip: zip,
-      });
-    });
+// //add user
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { name, lastname, email, password, address, zip } = req.body;
+//     bcrypt.hash(password, 8).then((hash) => {
+//       User.create({
+//         name: name,
+//         lastname: lastname,
+//         email: email,
+//         password: hash,
+//         address: address,
+//         zip: zip,
+//       });
+//     });
 
-    res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
-  } catch (error) {
-    console.error(`Error al registrar un usuario: ${error}`);
-    res.sendStatus(400);
-  }
-});
+//     res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
+//   } catch (error) {
+//     console.error(`Error al registrar un usuario: ${error}`);
+//     res.sendStatus(400);
+//   }
+// });
 
 //Delete User
 router.delete("/delUser/:id", async (req, res) => {
@@ -253,32 +254,6 @@ router.put("/modUser/:id", async (req, res) => {
   }
 });
 
-//login
-
-router.post("/login", async (req, res) => {
-  const { user, password } = req.body;
-  const email = await User.findOne({ where: { email: user } });
-  if (!email) {
-    res.json({
-      error: `No existe un usuario registrado con el correo ${email}`,
-    });
-    res.sendStatus(400);
-    return;
-  }
-  bcrypt.compare(password, email.password).then((match) => {
-    if (!match) {
-      res.json({ error: "Usuario y/o contraseña incorrectos" });
-      res.sendStatus(400);
-      return;
-    }
-    const token = sign(
-      { username: user.name, email: user.email, id: user.uid },
-      "n9LKWwL2u0AMphq2nuoB"
-    );
-    res.json(token);
-  });
-});
-
 //Purchases All
 router.get("/purchases", async (req, res) => {
   try {
@@ -299,12 +274,51 @@ router.get("/purchasesByClient", async (req, res) => {
 });
 
 //admin
-router.get("/admin", async (req, res) => {
-  try {
-  } catch (error) {
-    console.error(`Error al acceder a la sección de admin: ${error}`);
-    res.sendStatus(400);
+router.post("/admin", async (req, res) => {
+  const { email, password } = req.body;
+  const user = await User.findOne({ where: { email: email } });
+
+  if (!user) {
+    return res.json({ error: "usuario no existe" });
   }
+  bcrypt.compare(password, user.password).then((match) => {
+    if (!match) res.json({ error: "Usuario y / o contraseña incorrecta" });
+    if (match) {
+      console.log(`Se ha conectado ${user}`);
+    const token = sign(
+      {
+        user: User.email,
+        uid: User.uid,
+        name: User.name,
+        lastname: User.lastname,
+        address: User.address,
+        zip: User.zip,
+        admin: User.admin,
+      },
+      // process.env.NODE_ENV_SECRET
+      "DbmyStxumC"
+      );
+      res.json({"token": token, "admin": user.admin});
+    }
+  }); 
+});
+
+//REGISTER
+
+router.post("/register", async (req, res) => {
+  const { email, password } = req.body;
+  bcrypt.hash(password, 8).then((hash) => {
+    User.create({
+      email: email,
+      password: hash,
+    });
+    res.json("Usuario creado");
+  });
+});
+
+//checks for validToken
+router.get("/auth", validateToken, (req, res) => {
+  res.json(req.user);
 });
 
 // router.post("/checkout", async (req, res) => {

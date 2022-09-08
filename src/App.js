@@ -5,6 +5,7 @@ import NavBar from "./Components/NavBar";
 import "./Styles/App.css";
 import Admin from "./Views/Admin";
 import Checkout from "./Views/Checkout";
+import Dashboard from "./Views/Dashboard";
 import Delivery from "./Views/Delivery";
 import Home from "./Views/Home";
 import Menu from "./Views/Menu";
@@ -20,6 +21,8 @@ function App() {
           <Route path="/delivery" element={<Delivery />} />
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
+          <Route path="/dashboard" element={<Dashboard />} />
+
         </Routes>
       </BrowserRouter>
       <FooterH />

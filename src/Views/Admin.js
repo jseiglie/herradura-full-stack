@@ -1,9 +1,59 @@
-import React from 'react'
-
+import axios from "axios";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import Register from "../Components/Register";
 const Admin = () => {
-  return (
-    <div>Admin</div>
-  )
-}
+  const [email, setEmail] = useState();
+  const [password, setPassword] = useState();
+  //authSTate
 
-export default Admin
+  const navigate = useNavigate("");
+
+  const handleSubmit = async () => {
+    const payload = { email: email, password: password };
+
+    const resp = await axios
+      .post(`${process.env.REACT_APP_APIURL}/admin`, payload)
+      .then((res) => {
+        if (res.data.error) {
+          alert("usuario y contraseña erroneos");
+        } else {
+          localStorage.setItem("token", res.data.token);
+          navigate("/dashboard");
+        }
+        console.log(res);
+      });
+  };
+
+  return (
+    <div className="container w-50">
+      <div className="card">
+        <label htmlFor="username">Usuario</label>
+        <input
+          id="username"
+          className="from-control"
+          type="text"
+          name="usename"
+          onChange={(e) => setEmail(e.target.value)}
+          required
+        />
+        <label htmlFor="password">Contraseña</label>
+        <input
+          className="from-control"
+          type="password"
+          name="password"
+          onChange={(e) => setPassword(e.target.value)}
+          required
+        />
+        <button type="submit" onClick={handleSubmit}>
+          {" "}
+          Log in
+        </button>
+      </div>
+      register
+      <Register />
+    </div>
+  );
+};
+
+export default Admin;

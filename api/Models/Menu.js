@@ -16,7 +16,7 @@ const Menu = db.define("Menu", {
   },
   precio: {
     type: Sequelize.DOUBLE,
-    allowNull: false,
+    allowNull: false, 
   },
   vegano: {
     type: Sequelize.BOOLEAN,

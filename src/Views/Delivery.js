@@ -67,35 +67,50 @@ const Delivery = () => {
         <div className="row menu-wrapper">
           {data && data.length > 0 ? (
             data.map((item) => (
-              <div className="col-lg-4 col-md-4 col-sm-6 card-group mb-3">
-                <div className="card card-wrap">
+              <div className="col-xl-2 col-lg-3 col-md-4 col-sm-12 card-group mb-3">
+                <div className="card card-wrap scale">
                   <div className="card-body">
                     <div className="row">
-                      {item.img !== null ? (
-                        <div className="col-6">
-                          <div className="card-img">
-                            <img src="" alt="img plato" />
-                          </div>
+                      {item.img ? (
+                        <div className="card-img img-fluid mb-3">
+                          <img src={item.img} alt="img plato" />
                         </div>
                       ) : (
-                        <div className="col-6">
-                          <div className="card-img">
-                            <img
-                              src="./img/herradura_logo.webp"
-                              alt="Cargando"
-                            />
-                          </div>
+                        <div className="card-img img-fluid mb-3">
+                          <img
+                            src="./img/herradura_logo.webp"
+                            alt="Cargando"
+                            style={{ width: 150, height: "auto" }}
+                          />
                         </div>
                       )}
-                      <div className="col card-text-wrapper">
-                        <h5 className="line-clamp plato">{item.plato}</h5>
-                        <p className="line-clamp mb-0">{item.descripcion}</p>
+                      <div className=" card-text-wrapper mb-4">
+                        <h5 className="line-clamp plato">
+                          {item.plato.lenght >= 15 ? (
+                            <>{item.plato}</>
+                          ) : (
+                            <>
+                              {item.plato} <br />
+                              <br />
+                            </>
+                          )}
+                        </h5>
+                        <span className="line-clamp mb-0">
+                          {item.descripcion.lenght >= 15 ? (
+                            <>{item.descripcion}</>
+                          ) : (
+                            <>
+                              {item.descripcion} <br />
+                              <br />
+                            </>
+                          )}
+                        </span>
                       </div>
                     </div>
-                    <div className="card-foter">
+                    <div className="card-foter ">
                       <div className="row footer-wrapper">
-                        <div className="col footer-price">{item.precio}€</div>
-                        <div className="col">
+                        <div className="col-6 footer-price">{item.precio}€</div>
+                        <div className="col-6">
                           <span>
                             <i className="fa-solid fa-cart-arrow-down fa-xl footer-cart-ico rotate"></i>
                           </span>
