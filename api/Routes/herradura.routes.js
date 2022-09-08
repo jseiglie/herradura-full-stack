@@ -20,11 +20,8 @@ router.get("/menu", async (req, res) => {
   try {
     const resp = await Menu.findAll({ where: { disponible: true } });
     res.json(resp);
-
-    //
   } catch (error) {
     console.error(`Error al pedir el menu: ${error}`);
-    // res.sendStatus(400);
   }
 });
 
@@ -276,6 +273,7 @@ router.get("/purchasesByClient", async (req, res) => {
 //admin
 router.post("/admin", async (req, res) => {
   const { email, password } = req.body;
+  if (email == "" || password == "") res.json({ error: "Faltan datos" });
   const user = await User.findOne({ where: { email: email } });
 
   if (!user) {
@@ -285,22 +283,22 @@ router.post("/admin", async (req, res) => {
     if (!match) res.json({ error: "Usuario y / o contraseña incorrecta" });
     if (match) {
       console.log(`Se ha conectado ${user}`);
-    const token = sign(
-      {
-        user: User.email,
-        uid: User.uid,
-        name: User.name,
-        lastname: User.lastname,
-        address: User.address,
-        zip: User.zip,
-        admin: User.admin,
-      },
-      // process.env.NODE_ENV_SECRET
-      "DbmyStxumC"
+      const token = sign(
+        {
+          user: User.email,
+          uid: User.uid,
+          name: User.name,
+          lastname: User.lastname,
+          address: User.address,
+          zip: User.zip,
+          admin: User.admin,
+        },
+        // process.env.NODE_ENV_SECRET
+        "DbmyStxumC"
       );
-      res.json({"token": token, "admin": user.admin});
+      res.json({ token: token, admin: user.admin });
     }
-  }); 
+  });
 });
 
 //REGISTER

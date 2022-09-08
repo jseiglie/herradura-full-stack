@@ -10,8 +10,9 @@ const Admin = () => {
   const navigate = useNavigate("");
 
   const handleSubmit = async () => {
+    if (!email || !password)
+      alert("Asegúrese de haber introducido correo electrónico y contraseña");
     const payload = { email: email, password: password };
-
     const resp = await axios
       .post(`${process.env.REACT_APP_APIURL}/admin`, payload)
       .then((res) => {

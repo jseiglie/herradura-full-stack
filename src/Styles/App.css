@@ -363,8 +363,6 @@ body::-webkit-scrollbar-thumb {
   position: absolute; */
 }
 
-.card-body {
-}
 
 .card-wrap {
   border: 1px solid #212529;
@@ -394,6 +392,73 @@ body::-webkit-scrollbar-thumb {
   -webkit-animation: scale-up-ver-center 0.4s
     cubic-bezier(0.39, 0.575, 0.565, 1) both;
   animation: scale-up-ver-center 0.4s cubic-bezier(0.39, 0.575, 0.565, 1) both;
+}
+
+
+.dash-wrap{
+  display: flex;
+  flex-direction: column;
+  
+}
+
+.title-logout{
+  justify-content: center;
+  
+}
+
+.logout{
+  margin-left: auto;
+  
+}
+
+.cat-add-holder{
+  background-color: #00000054;
+  color: #f7f7f7;
+  padding: 0.5rem;
+}
+.cat-holder{
+  align-items: center;
+  justify-content: center;
+}
+.cat-col{
+  display: flex;
+  -webkit-line-clamp: 1;
+  overflow: hidden;
+  text-align: center;
+}
+.cat-item{
+  padding: 0.2rem;
+}
+
+.cat-item:hover, .dash-ico:hover{
+  cursor: pointer;
+  color: #631d1d;
+}
+.dashboard-Actions:hover{
+  cursor: pointer;
+  background-color: #631d1d;
+}
+.actionsHolder{
+  justify-content: space-evenly;
+
+}
+
+.dashboard-Actions{
+  align-self: center;
+  border-radius: 2rem;
+  height: 40px;  
+  color: #f7f7f7;
+  background-color: #212529;
+  display: flex;
+  padding: 1rem;
+  margin: 1rem 0;
+}
+.middle{
+  align-self: center;
+}
+
+.menu-item{
+  padding: 0.3rem 0;
 }
 
 /**
