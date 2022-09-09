@@ -54,7 +54,9 @@ const Dashboard = () => {
   }, [selected, refresh]);
 
   const handleDelete = async (e) => {
-    console.log(e.target.id);
+    await axios.delete(
+      `${process.env.REACT_APP_APIURL}/delMenu/${e.target.id}`
+    );
   };
 
   const handleDestacar = async (e, value) => {
@@ -62,7 +64,6 @@ const Dashboard = () => {
     let payload;
     value ? (payload = { destacada: false }) : (payload = { destacada: true });
     try {
-      console.log(`${process.env.REACT_APP_APIURL}/destacar/${e}`);
       await axios
         .put(`${process.env.REACT_APP_APIURL}/destacar/${e}`, payload)
         .then((e) => console.log(e));
