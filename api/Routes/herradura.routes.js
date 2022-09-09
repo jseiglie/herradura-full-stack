@@ -87,12 +87,44 @@ router.put("/modMenu/:id", async (req, res) => {
   }
 });
 
+router.put("/modPrecio/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const { precio } = req.body;
+    await Menu.update({ precio: precio }, { where: { uid: id } });
+  } catch (error) {
+    console.log(error);
+  }
+});
+
 //disponible toggler
 router.patch("/menuDisponible/:id", async (req, res) => {
   try {
     const id = req.params.id;
   } catch (error) {
     console.error(`Error al habilitar el plato: ${error}`);
+    res.sendStatus(400); 
+  }
+});
+
+//destacar toggler
+router.put("/destacar/:id", async (req, res) => {
+  const id = req.params.id;
+  const { destacada } = req.body;
+  try { 
+    Menu.update(
+      {
+        destacado: destacada,
+      },
+      {
+        where: {
+          uid: id,
+        },
+      }
+    );
+    res.send({msg: "actualizado"})
+  } catch (error) {
+    console.error(`Error al destacar el plato: ${error}`);
     res.sendStatus(400);
   }
 });
@@ -145,9 +177,9 @@ router.put("/editCategory/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const { catego } = req.body;
-    await Categories.update(
+    await User.update(
       {
-        catego: catego,
+        id_catego2: catego,
       },
       { where: { id: id } }
     );
