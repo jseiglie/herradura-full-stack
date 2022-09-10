@@ -1,18 +1,21 @@
 import axios from "axios";
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 
 const Edit = () => {
   const { id } = useParams();
   const [data, setData] = useState([]);
-  const [plato, setPlato] = useState();
-  const [descripcion, setDescripcion] = useState();
-  const [precio, setPrecio] = useState();
+  const [plato, setPlato] = useState(data.plato);
+  const [descripcion, setDescripcion] = useState(data.descripcion);
+  const [precio, setPrecio] = useState(data.precio);
   const [vegano, setVegano] = useState(false);
-  const [id_catego2, setId_catego2] = useState();
+  const [id_catego2, setId_catego2] = useState(data.id_catego2);
   const [disponible, setDisponible] = useState(true);
-  const [destacar, setDestacar] = useState();
+  const [destacar, setDestacar] = useState(data.destacar);
   const [categoryUid, setCategoryUid] = useState(id_catego2);
+  const [catego, setCatego] = useState(data.catego);
+  const [categories, setCategories] = useState([]);
+  const navigate = useNavigate();
 
   const loader = async () => {
     if (id) {
@@ -21,34 +24,57 @@ const Edit = () => {
           `${process.env.REACT_APP_APIURL}/oneItem/${id}`
         );
         setData(res.data);
+        //  console.log(data)
+        setCatego(res.data.id_catego2);
+        //console.log(catego)
       } catch (error) {
         console.log(error);
       }
     }
   };
 
+  const loadCat = async () => {
+    const resp = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
+    setCategories(resp.data);
+    //console.log(resp.data)
+  };
+
   useEffect(() => {
     loader();
+    loadCat();
   }, []);
+
+  useEffect(() => {
+    console.log("effect-----" + catego);
+  }, [catego]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
+  const title = () => {
+    console.log("title" + catego);
+    let result = categories.filter((item) => item.uid === catego);
+    return result[0].catego;
+  };
+
   return (
     <div>
-      <h1>Añadir/Editar</h1>
+      <h1 className="mt-4">Añadir/Editar</h1>
 
       <div className="container d-flex">
-        <form className="form-control" onSubmit={(e) => handleSubmit(e)}>
+        <form
+          className="form-control mt-4 mb-5 p-3"
+          onSubmit={(e) => handleSubmit(e)}
+        >
           <div className="row">
-            <div className="col">
+            <div className="col-xl-6 col-lg-6  col-md-6 col-sm-12 col-xs-12 ">
               <label htmlFor="plato">Plato</label>
               <input
                 className="form-control"
                 id="plato"
                 type="text"
-                placeholder={data.plato}
+                defaultValue={data.plato}
                 name="plato"
                 onChange={(e) => setPlato(e.target.value)}
               />
@@ -57,7 +83,7 @@ const Edit = () => {
                 className="form-control"
                 id="descripcion"
                 type="text"
-                placeholder={data.descripcion}
+                defaultValue={data.descripcion}
                 name="descripcion"
                 onChange={(e) => setDescripcion(e.target.value)}
               />
@@ -66,23 +92,25 @@ const Edit = () => {
                 className="form-control"
                 id="precio"
                 type="number"
-                placeholder={data.precio}
+                defaultValue={data.precio}
                 name="precio"
                 onChange={(e) => setPrecio(e.target.value)}
               />
               <label htmlFor="categoria">Categoria</label>
-              <input
+              <select
                 className="form-control"
                 id="categoria"
-                type="text"
-                placeholder={data.id_catego2}
                 name="categoria"
-                onChange={(e) => setId_catego2(e.target.value)}
-              />
+                onChange={(e) => setCatego(e.target.value)}
+              >
+                {categories.map((item) => (
+                  <option value={item.uid}>{item.catego}</option>
+                ))}
+              </select>
             </div>
             <div className="col">
               <label htmlFor="vegano">Vegano</label>
-              <select id="vegano" name="vegano">
+              <select className="form-control" id="vegano" name="vegano">
                 <option value={true}>Si</option>
                 <option value={false} selected>
                   No
@@ -90,7 +118,11 @@ const Edit = () => {
               </select>
               <br />
               <label htmlFor="disponible">Disponible</label>
-              <select id="disponible" name="disponible">
+              <select
+                className="form-control"
+                id="disponible"
+                name="disponible"
+              >
                 <option value={true} selected>
                   Si
                 </option>
@@ -98,15 +130,28 @@ const Edit = () => {
               </select>
               <br />
               <label htmlFor="destacar">Destacar</label>
-              <select id="destacar" name="destacar">
+              <select className="form-control" id="destacar" name="destacar">
                 <option value={true}>Si</option>
                 <option value={false} selected>
                   No
                 </option>
               </select>
-              <input className="form-control" type="submit" value={"enviar"} />
             </div>
           </div>
+          <input
+            className="form-control mt-3 w-50 mx-auto mt-5 btn btn-success add-edit-btn"
+            type="submit"
+            value={"Enviar"}
+          />
+          <button
+            className="form-control mt-3 w-50 mx-auto mt-5 btn btn-danger add-edit-btn"
+            onClick={(e) => navigate("/dashboard")}
+          >
+            Cancelar
+          </button>
+          <p className="text-muted form-text-advice ">
+            *todos los datos son obligatorios
+          </p>
         </form>
       </div>
     </div>

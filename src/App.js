@@ -25,6 +25,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit/:id" element={<Edit/>}/>
           <Route path="/add" element={<Edit/>}/>
+          <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>
       <FooterH />

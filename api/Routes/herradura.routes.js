@@ -382,58 +382,11 @@ router.get("/auth", validateToken, (req, res) => {
   res.json(req.user);
 });
 
-// router.post("/checkout", async (req, res) => {
-//   console.log("Request:", req.body);
-
-//   let error;
-//   let status;
-//   try {
-//     const { product, token } = req.body;
-
-//     const customer = await stripe.customers.create({
-//       email: token.email,
-//       source: token.id,
-//     });
-
-//     const idempotency_key = uuid();
-//     const charge = await stripe.charges.create(
-//       {
-//         amount: product.price * 100,
-//         currency: "eur",
-//         customer: customer.id,
-//         receipt_email: token.email,
-//         description: `Purchased the ${product.name}`,
-//         shipping: {
-//           name: token.card.name,
-//           address: {
-//             line1: token.card.address_line1,
-//             line2: token.card.address_line2,
-//             city: token.card.address_city,
-//             country: token.card.address_country,
-//             postal_code: token.card.address_zip,
-//           },
-//         },
-//       },
-//       {
-//         idempotency_key,
-//       }
-//     );
-//     console.log("Charge:", { charge });
-//     status = "success";
-//   } catch (error) {
-//     console.error("Error:", error);
-//     status = "failure";
-//   }
-
-//   res.json({ error, status });
-// });
-
-//stripe from web
-
 const calculateOrderAmount = (items) => {
   // Replace this constant with a calculation of the order's amount
   // Calculate the order total on the server to prevent
   // people from directly manipulating the amount on the client
+ console.log(items)
   return 1400;
 };
 
@@ -445,7 +398,7 @@ router.post("/create-payment-intent", async (req, res) => {
     amount: calculateOrderAmount(items),
     currency: "eur",
     automatic_payment_methods: {
-      enabled: true,
+      enabled: false,
     },
   });
 

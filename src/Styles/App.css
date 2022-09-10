@@ -208,6 +208,8 @@ body::-webkit-scrollbar-thumb {
   text-decoration: none;
   color: #f7f7f7;
   padding: 0.5rem;
+  border: 0;
+  background-color: transparent;
 }
 .about_Info {
   margin-bottom: 1rem;
@@ -454,6 +456,14 @@ body::-webkit-scrollbar-thumb {
   border-bottom: 1px solid #212529;
   margin-bottom: 1rem;
 }
+
+.form-text-advice{
+text-align-last: right;
+margin-top: 2rem;
+margin-bottom: 0;
+padding-bottom: 0;
+}
+
 /**
  * ----------------------------------------
  * animation scale-up-ver-center

@@ -1,16 +1,27 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import Cart from "../Components/Cart";
 
-const Delivery = (props) => {
+
+function addItem(uid, plato, precio){
+  this.id = uid;
+  this.plato = plato;
+  this.precio = precio;
+}
+
+const Delivery = () => {
   const [catego, setCatego] = useState();
   const [data, setData] = useState([]);
-  const [toggle, setToggle] = useState(false);
+
   const [categories, setCategories] = useState([]);
+  const [items, setItems] = useState([]);
 
   const loader = async () => {
     const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
     setData(menu.data);
+    sessionStorage.setItem("menu", JSON.stringify( menu.data))
+
     const cat = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(cat.data);
   };
@@ -33,9 +44,22 @@ const Delivery = (props) => {
     loadCat(catego);
     //  console.log("catego useEffect: " + catego);
   }, [catego]);
-  const handleToggle = () => {
-    setToggle(true);
+
+  useEffect(() => {
+   // console.log(items);
+  }, [items]);
+
+  const handleItems = (e) => {
+    
+    const id = (e.target.id)
+
+    const result = data.filter((item)=> item.uid === id)
+    //console.log(result[0].uid)
+    
+    setItems([...items, new addItem(result[0].uid, result[0].plato, result[0].precio)]);
+    //console.log(items)
   };
+
   const title = () => {
     let result = categories.filter((item) => item.uid === catego);
     return result[0].catego;
@@ -90,9 +114,10 @@ const Delivery = (props) => {
             Menu
           </button>
           <span>
-            <Link className="no-deco" to={"/checkout"}>
+            <button className="no-deco"  data-bs-toggle="modal"
+        data-bs-target="#exampleModal">
               <i className="fa-solid fa-cart-shopping cart-ico rotate"></i>
-            </Link>
+            </button>
           </span>
         </div>
       ) : (
@@ -153,7 +178,11 @@ const Delivery = (props) => {
                         <div className="col-6 footer-price">{item.precio}€</div>
                         <div className="col-6">
                           <span>
-                            <i className="fa-solid fa-cart-arrow-down fa-xl footer-cart-ico rotate"></i>
+                            <i
+                              id={item.uid}
+                              className="fa-solid fa-cart-arrow-down fa-xl footer-cart-ico rotate"
+                              onClick={(e) => handleItems(e)}
+                            ></i>
                           </span>
                         </div>
                       </div>
@@ -165,6 +194,29 @@ const Delivery = (props) => {
           ) : (
             <img src="./img/herradura_logo.webp" alt="Cargando" />
           )}
+        </div>
+      </div>
+
+      {/* <!-- Button trigger modal --> */}
+      <button
+        type="button"
+        className="btn btn-primary"
+        data-bs-toggle="modal"
+        data-bs-target="#exampleModal"
+      >
+        Launch demo modal
+      </button>
+
+      {/* <!-- Modal --> */}
+      <div
+        className="modal fade"
+        id="exampleModal"
+        tabIndex="-1"
+        aria-labelledby="exampleModalLabel"
+        aria-hidden="true"
+      >
+        <div className="modal-dialog">
+          <Cart items={items} />
         </div>
       </div>
     </div>
