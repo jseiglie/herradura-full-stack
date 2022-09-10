@@ -15,8 +15,8 @@ const stripe = require("stripe")(
 );
 const { Op } = require("sequelize");
 
-//Menu
-router.get("/menu", async (req, res) => {
+//Menu disponible
+router.get("/menuDisponible", async (req, res) => {
   try {
     const resp = await Menu.findAll({ where: { disponible: true } });
     res.json(resp);
@@ -25,7 +25,16 @@ router.get("/menu", async (req, res) => {
   }
 });
 
-//Destacados
+router.get("/menu", async (req, res) => {
+  try {
+    const resp = await Menu.findAll();
+    res.json(resp);
+  } catch (error) {
+    console.error(`Error al pedir el menu: ${error}`);
+  }
+});
+
+//Destacados limited
 router.get("/destacados", async (req, res) => {
   try {
     const resp = await Menu.findAll({
@@ -68,6 +77,18 @@ router.post("addToMenu", async (req, res) => {
   }
 });
 
+//get One Menu item
+
+router.get("/oneItem/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const resp = await Menu.findByPk(id);
+    res.json(resp);
+  } catch (error) {
+    res.json({ error: error });
+  }
+});
+
 //modify Menu
 router.put("/modMenu/:id", async (req, res) => {
   try {
@@ -98,12 +119,22 @@ router.put("/modPrecio/:id", async (req, res) => {
 });
 
 //disponible toggler
-router.patch("/menuDisponible/:id", async (req, res) => {
+router.put("/menuDisponible/:id", async (req, res) => {
+  const id = req.params.id;
+  const { disponible } = req.body;
   try {
-    const id = req.params.id;
+    await Menu.update(
+      {
+        disponible: disponible,
+      },
+      {
+        where: { uid: id },
+      }
+    );
+    res.send({ msg: "Se ha actualizado correctamente la disponibilidad" });
   } catch (error) {
-    console.error(`Error al habilitar el plato: ${error}`);
-    res.sendStatus(400); 
+    console.error(`Error al modificar disponibilidad: ${error}`);
+    res.sendStatus(400);
   }
 });
 
@@ -111,7 +142,7 @@ router.patch("/menuDisponible/:id", async (req, res) => {
 router.put("/destacar/:id", async (req, res) => {
   const id = req.params.id;
   const { destacada } = req.body;
-  try { 
+  try {
     Menu.update(
       {
         destacado: destacada,
@@ -122,7 +153,7 @@ router.put("/destacar/:id", async (req, res) => {
         },
       }
     );
-    res.send({msg: "actualizado"})
+    res.send({ msg: "actualizado" });
   } catch (error) {
     console.error(`Error al destacar el plato: ${error}`);
     res.sendStatus(400);

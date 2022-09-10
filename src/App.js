@@ -7,6 +7,7 @@ import Admin from "./Views/Admin";
 import Checkout from "./Views/Checkout";
 import Dashboard from "./Views/Dashboard";
 import Delivery from "./Views/Delivery";
+import Edit from "./Views/Edit";
 import Home from "./Views/Home";
 import Menu from "./Views/Menu";
 
@@ -22,7 +23,8 @@ function App() {
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/dashboard" element={<Dashboard />} />
-
+          <Route path="/edit/:id" element={<Edit/>}/>
+          <Route path="/add" element={<Edit/>}/>
         </Routes>
       </BrowserRouter>
       <FooterH />

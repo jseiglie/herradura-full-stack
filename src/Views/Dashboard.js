@@ -13,6 +13,8 @@ const Dashboard = () => {
   const [plato, setPlato] = useState();
   const [destacar, setDestacar] = useState();
   const [refresh, setRefresh] = useState(false);
+  const [disponible, setDisponible] = useState()
+
 
   useEffect(() => {
     if (!localStorage.getItem("token")) {
@@ -66,15 +68,23 @@ const Dashboard = () => {
     try {
       await axios
         .put(`${process.env.REACT_APP_APIURL}/destacar/${e}`, payload)
-        .then((e) => console.log(e));
       setRefresh(refresh ? false : true);
     } catch (error) {
       console.log(error);
     }
   };
 
-  const handleDisponible = async (e) => {
-    console.log(e.target.id);
+  const handleDisponible = async (e, value) => {
+    setDisponible(value);
+    let payload;
+    value ? (payload = { disponible: false }) : (payload = { disponible: true });
+    try {
+      await axios
+        .put(`${process.env.REACT_APP_APIURL}/menuDisponible/${e}`, payload)
+      setRefresh(refresh ? false : true);
+    } catch (error) {
+      console.log(error);
+    }
   };
 
   const handlePrecio = async (e) => {
@@ -83,7 +93,6 @@ const Dashboard = () => {
         id: e.target.id,
         precio: precio,
       };
-
       await axios.put(
         `${process.env.REACT_APP_APIURL}/modPrecio/${e.target.id}`,
         values
@@ -91,18 +100,8 @@ const Dashboard = () => {
     }
   };
 
-  const handleCatego = async (e) => {
-    const res = await axios.put(
-      `${process.env.REACT_APP_APIURL}/editcategory/${e.target.id}`
-    );
-    console.log(res);
-  };
-
-  const handlePlato = async (e) => {
-    console.log(e.target.id);
-  };
   const handleEdit = async (e) => {
-    console.log(e.target.id);
+    navigate(`/edit/${e.target.id}`);
   };
   return (
     <div className="container-fluid dash-wrap">
@@ -139,7 +138,7 @@ const Dashboard = () => {
 
         <div className="col-1 d-flex actionsHolder ">
           <div className="dashboard-Actions ">
-            <span className="middle">+</span>
+            <span className="middle" onClick={e=>navigate("/add")}>+</span>
             {/* </div>
         <div className="dashboard-Actions">
         <span>Crear Oferta</span>
@@ -170,19 +169,17 @@ const Dashboard = () => {
           <div key={i} className="row menu-item ">
             <div
               id={item.uid}
-              onClick={(e) => handlePlato(e)}
               className="col-xl-5 col-lg-5 col-md-5 col-sm-5"
             >
               {item.plato}
             </div>
             <div
               id={item.uid}
-              onClick={(e) => handleCatego(e)}
               className="col-xl-2 col-lg-2 col-md-2 col-sm-2"
             >
               {catego.map((cat) =>
                 cat.uid === item.id_catego2 ? cat.catego : ""
-              )}
+              )} 
             </div>
             <input
               id={item.uid}
@@ -198,13 +195,13 @@ const Dashboard = () => {
               {item.disponible ? (
                 <i
                   id={item.uid}
-                  onClick={(e) => handleDisponible(e)}
+                  onClick={(e) => handleDisponible(item.uid, item.disponible)}
                   className="dash-ico fa-regular fa-square-check"
                 ></i>
               ) : (
                 <i
                   id={item.uid}
-                  onClick={(e) => handleDisponible(e)}
+                  onClick={(e) => handleDisponible(item.uid, item.disponible)}
                   className="dash-ico fa-regular fa-square"
                 ></i>
               )}
