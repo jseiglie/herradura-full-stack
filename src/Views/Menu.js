@@ -4,7 +4,7 @@ const Menu = () => {
   return (
     <>
       <div className="container-fluid">
-        <h1 className="mt-5 mb-5">A la Carta</h1>
+        <h1 className="mt-5 mb-5">¿De qué tienes ganas?</h1>
         <div className="row d-flex mt-2 menu-download-wrapp ">
         <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-desayuno d-flex">
             <a
@@ -28,7 +28,7 @@ const Menu = () => {
               className="download-item-box  "
               href={require("../menu/carta.pdf")}
             >
-              <span className="download-item">Menu</span>
+              <span className="download-item">Menu Completo</span>
             </a>
           </div>
           <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-cerveza d-flex">

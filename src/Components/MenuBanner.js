@@ -21,9 +21,11 @@ const MenuBanner = () => {
             <div className="pedido-holder">
               <div className="menu-pedido w-100">
                 <span className="menu-text">
-                  <Link className="no-deco" to={"/delivery"}>
+                  {/* <Link className="no-deco" to={"/delivery"}> */}
+                   <button className="btn no-deco" onClick={e=>alert("proximamente")}>
                     A Recoger
-                  </Link>
+                    </button> 
+                  {/* </Link> */}
                 </span>
               </div>
             </div>
@@ -32,9 +34,11 @@ const MenuBanner = () => {
             <div className="pedido-holder">
               <div className="menu-takeaway w-100">
                 <span className="menu-text">
-                  <Link className="no-deco" to={"/delivery"}>
+                  {/* <Link className="no-deco" to={"/delivery"}> */}
+                  <button className="btn no-deco" onClick={e=>alert("proximamente")}>
                     A la Casa
-                  </Link>
+                    </button>
+                  {/* </Link> */}
                 </span>
               </div>
             </div>

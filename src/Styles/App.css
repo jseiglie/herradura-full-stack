@@ -284,6 +284,9 @@ body::-webkit-scrollbar-thumb {
   margin-left: auto;
   margin-right: auto;
 }
+.nav-span:hover{
+  cursor: pointer;
+}
 .delivery-nav-ul {
   text-align-last: left;
 }

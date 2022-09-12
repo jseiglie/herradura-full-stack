@@ -43,11 +43,15 @@ const NavBar = () => {
               </Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to={"/delivery"}>
-                <HashLink className="nav-link" to={"/delivery"}>
-                  <span className="nav-span">A la Casa</span>
-                </HashLink>
-              </Link>
+              {/* <Link className="nav-link" to={"/delivery"}>
+                <HashLink className="nav-link" to={"/delivery"}> */}
+              <div className="nav-link">
+                <div className="nav-link">
+                  <span className="nav-span"  onClick={e=>alert("proximamente")}>A la Casa</span>
+                </div>
+              </div>
+              {/* </HashLink>
+              </Link> */}
             </li>
             <li className="nav-item">
               <Link className="nav-link" to={"/menu"}>
