@@ -2,17 +2,78 @@ import axios from "axios";
 import React, { useEffect, useState } from "react";
 
 const News = () => {
-  const [data, setData] = useState([]);
+  // const [data, setData] = useState([]);
   const url = process.env.REACT_APP_APIURL;
 
-  const getData = async () => {
-    const resp = await axios.get(`${url}/destacados`);
-    setData(resp.data);
-  };
+  // const getData = async () => {
+  //   const resp = await axios.get(`${url}/destacados`);
+  //   setData(resp.data);
+  //   console.log(resp.data)
+  // };
 
-  useEffect(() => {
-    getData();
-  }, []);
+  // useEffect(() => {
+  //   getData();
+  // }, []);
+
+  const data = [
+    {
+        "uid": "0495d314-2482-11ed-a49a-50ebf6c32832",
+        "plato": "Taco Mexicano de Cerdo (Ración)",
+        "descripcion": "8 Tacos Mexicano de Cerdo",
+        "precio": 9.95,
+        "vegano": false,
+        "disponible": true,
+        "destacado": true,
+        "createdAt": "2022-08-25T14:25:32.000Z",
+        "updatedAt": "2022-08-25T14:25:32.000Z",
+        "id_catego1": null,
+        "id_catego2": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832",
+        "CategoryUid": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832"
+    },
+    {
+        "uid": "16036fce-2481-11ed-a49a-50ebf6c32832",
+        "plato": "Empanadillas Colombianas de Cerdo (Ración)",
+        "descripcion": "8 Empanadillas Colombianas de Cerdo",
+        "precio": 9.95,
+        "vegano": false,
+        "disponible": true,
+        "destacado": true,
+        "createdAt": "2022-08-25T14:19:41.000Z",
+        "updatedAt": "2022-08-25T14:19:41.000Z",
+        "id_catego1": null,
+        "id_catego2": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832",
+        "CategoryUid": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832"
+    },
+    {
+        "uid": "253bc98b-2482-11ed-a49a-50ebf6c32832",
+        "plato": "Taco Mexicano de Ternera (Ración)",
+        "descripcion": "8 Tacos Mexicano de Ternera",
+        "precio": 9.95,
+        "vegano": false,
+        "disponible": true,
+        "destacado": true,
+        "createdAt": "2022-08-25T14:27:23.000Z",
+        "updatedAt": "2022-08-25T14:27:23.000Z",
+        "id_catego1": null,
+        "id_catego2": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832",
+        "CategoryUid": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832"
+    },
+    {
+        "uid": "253bd48d-2482-11ed-a49a-50ebf6c32832",
+        "plato": "Taco Mexicano de Pollo (Ración)",
+        "descripcion": "8 Tacos Mexicano de Cerdo",
+        "precio": 9.95,
+        "vegano": false,
+        "disponible": true,
+        "destacado": true,
+        "createdAt": "2022-08-25T14:27:23.000Z",
+        "updatedAt": "2022-08-25T14:27:23.000Z",
+        "id_catego1": null,
+        "id_catego2": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832",
+        "CategoryUid": "b3b4dc7e-247f-11ed-a49a-50ebf6c32832"
+    }
+]
+
 
 const handleClick=(e) =>{
 
@@ -37,23 +98,19 @@ const handleClick=(e) =>{
                       className="news-logo"
                     />
                     <span className="dienesis-R">~</span>
-                    <img
-                      src=""
-                      alt="Platos nuevos"
-                      className="img-fluid news-img"
-                    /><p  className="mt-4" style={{backgroundColor: "#00000010"}}>
+                   <div  className="mt-4" style={{backgroundColor: "#00000010"}}>
 
                     {item.plato}
-                    </p>
+                    </div>
                     
-                    <p className="line-clamp" >
+                    <div className="line-clamp" >
                       {item.descripcion}
-                      </p>
+                      </div>
                     <br />
-                    <p className="footer-wrapper">
+                    <div className="footer-wrapper">
 
                     --{item.precio}€-- <br />
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>

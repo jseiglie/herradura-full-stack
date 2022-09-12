@@ -6,7 +6,7 @@ const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-holder sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           <img
             src="./img/herradura_logo.webp"
             alt="La Herradura Vinoteca Logo"

@@ -12,9 +12,10 @@ const stripePromise = loadStripe("pk_test_51Jub2MIPsB2uwGnPRHuBviGhVXe4EpAfloWRq
 const Checkout = (props) => {
 
     const [clientSecret, setClientSecret] = useState("");
-    const [items, setItems] = useState([props.item])
-    
+    let items = [props.item]
 
+    const [now, setNow] =useState(false)
+    const [local, setLocal] =useState(false)
 
 
     useEffect(() => {
@@ -36,15 +37,30 @@ const Checkout = (props) => {
       appearance,
     };
   
-    return (
-      <div className="App">
+    const handleOnline = (e)=>{
+      setNow(true)
+      setLocal(false)
+      console.log()
+  }
+  
+  const handleLocal = (e)=>{
+      setNow(false)
+      setLocal(true)
+  }
 
-        {clientSecret && (
+    return (
+      <>
+ <h1>Cómo desea realizar el pago?</h1>
+    <button className="btn" onClick={e=> handleOnline(e)}>Pagar ahora</button>
+    <button className="btn" onClick={e=> handleLocal(e)}>Pagar en el local</button>
+    {now==true? 
+        clientSecret && (
           <Elements options={options} stripe={stripePromise}>
             <CheckoutForm />
           </Elements>
-        )}
-      </div>
+        )
+        :  ""}
+        </>
     );
  };
 
