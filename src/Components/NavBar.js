@@ -47,6 +47,17 @@ const NavBar = () => {
                 <HashLink className="nav-link" to={"/delivery"}> */}
               <div className="nav-link">
                 <div className="nav-link">
+                  <span className="nav-span"  onClick={e=>alert("proximamente")}>Para Recoger</span>
+                </div>
+              </div>
+              {/* </HashLink>
+              </Link> */}
+            </li>
+            <li className="nav-item">
+              {/* <Link className="nav-link" to={"/delivery"}>
+                <HashLink className="nav-link" to={"/delivery"}> */}
+              <div className="nav-link">
+                <div className="nav-link">
                   <span className="nav-span"  onClick={e=>alert("proximamente")}>Para Casa</span>
                 </div>
               </div>
@@ -56,7 +67,7 @@ const NavBar = () => {
             <li className="nav-item">
               <Link className="nav-link" to={"/menu"}>
                 <HashLink className="nav-link" to={"/#about"}>
-                  <span className="nav-span">A Nosotros</span>
+                  <span className="nav-span">Nosotros</span>
                 </HashLink>
               </Link>
             </li>

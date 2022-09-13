@@ -248,7 +248,7 @@ body::-webkit-scrollbar-thumb {
   background-repeat: no-repeat;
 }
 .download-bocadillos {
-  background-image: url("../../public/img/bocadillos.jpg");
+  background-image: url("../../public/img/vinos_sm.jpg");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;

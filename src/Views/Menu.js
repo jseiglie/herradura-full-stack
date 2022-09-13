@@ -11,17 +11,10 @@ const Menu = () => {
               className="download-item-box "
               href={require("../menu/desayunos.pdf")}
             >
-              <span className="download-item">Desayunos</span>
+              <span className="download-item">Desayunos y bocadillos</span>
             </a>
           </div>
-          <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-bocadillos d-flex">
-            <a
-              className="download-item-box "
-              href={require("../menu/bocadillos.pdf")}
-            >
-              <span className="download-item">Bocadillos</span>
-            </a>
-          </div>
+          
 
           <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-menu d-flex">
             <a
@@ -29,6 +22,14 @@ const Menu = () => {
               href={require("../menu/carta.pdf")}
             >
               <span className="download-item">La Carta</span>
+            </a>
+          </div>
+          <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-bocadillos d-flex">
+            <a
+              className="download-item-box "
+              href={require("../menu/bocadillos.pdf")}
+            >
+              <span className="download-item">Vinos</span>
             </a>
           </div>
           <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-cerveza d-flex">
