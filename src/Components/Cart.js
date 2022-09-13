@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 const Cart = (props) => {
   let cartItems = [props.items];
@@ -10,12 +11,18 @@ const Cart = (props) => {
   const [cleanCart, setCleanCart] = useState([])
   const navigate = useNavigate();
 
+const date = new Date().toISOString().slice(2,19).replace(/-/g,"_")
+const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*1000)
+
   useEffect(() => {
     debt();
+    
     amountOfItems();
-    console.log("cartItems", cartItems)
-   
-  }, [items]);
+    //console.log("cartItems", cartItems)
+    console.log(items)
+
+    
+  }, [cartItems[0]]);
 
 
   const clean = ()=>{
@@ -27,7 +34,6 @@ const Cart = (props) => {
     
   }
   
-
 
   const debt = () => {
     let arr = [];
@@ -51,12 +57,27 @@ const Cart = (props) => {
     }
   };
 
-  const handleProcesarPago = (e) => {
-    navigate("/checkout");
+  const handleProcesarPago = async (e) => {
+    console.log(cartItems[0])
+    const payload = {data: cartItems[0], number: ran, total: subtotal}
+    console.log(payload)
+    try {
+      await axios.post(
+        `${process.env.REACT_APP_APIURL}/neworder`,
+        payload).then((res)=>console.log(res)).then((res)=>console.log(res))
+      
+      navigate("/checkout");
+      
+    } catch (error) {
+      alert("Ha ocurrido un error en el proceso")
+      console.log({error: error})
+    }
+
   };
 
   const handleEmpty = () => {
     cartItems = [];
+    setItems([])
     props.sendData(cartItems);
   };
 
@@ -76,7 +97,6 @@ const Cart = (props) => {
     cartItems[0].filter((item) => item.id === id).length;
 
   const addToCart = (item) => {
-    console.log(item)
     cartItems[0] = [...cartItems[0], item];
     console.log(cartItems[0])
     props.sendAdd(cartItems);

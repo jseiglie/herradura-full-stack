@@ -192,9 +192,9 @@ router.get("/bycategory/:id", async (req, res) => {
   res.send(resp);
 });
 //add catego
-router.post("addCategory", async (req, res) => {
+router.post("/addCategory", async (req, res) => {
   try {
-    const payload = req.body;
+    const payload = req.body; 
     await Categories.create(payload);
     res.json(payload);
   } catch (error) {
@@ -332,6 +332,24 @@ router.get("/purchasesByClient", async (req, res) => {
     res.sendStatus(400);
   }
 });
+//new purchase
+router.post("/neworder", async (req, res)=>{
+  const {data, number, total} = req.body
+  let temp = []
+  let backprice
+  data.forEach(element => {
+    temp.push(element.precio)
+    backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
+  });
+console.log(total)
+  if (total === backprice) {console.log("se cumple")
+  console.log(backprice)
+  res.json(data)
+}
+else {
+  res.json({error: "no coincide"})
+}
+})
 
 //admin
 router.post("/admin", async (req, res) => {

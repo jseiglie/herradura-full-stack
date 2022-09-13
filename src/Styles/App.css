@@ -487,6 +487,37 @@ body::-webkit-scrollbar-thumb {
   cursor: pointer;
   border: 0;
 }
+.btn-group-checkout{
+  justify-content: center;
+}
+
+.btn-pay-now, .btn-pay-local{
+max-width: 15rem;
+max-height: 15rem;
+min-width: 10rem;
+min-height: 10rem;
+margin: 1rem;
+border: 0;
+}
+
+.pay-now, .pay-local{
+margin: 1rem;
+}
+.pay-now{
+background-image: url("../../public/img/pay_now1sm.jpg"); 
+background-position: center;
+} 
+.pay-local{
+  background-image: url("../../public/img/local1sm.jpg");
+  background-position: center;
+}
+
+.checkout-wrapper{
+  height: 80vh;
+  display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
 /**
  * ----------------------------------------

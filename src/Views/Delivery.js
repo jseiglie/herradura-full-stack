@@ -3,11 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Cart from "../Components/Cart";
 
-function addItem(uid, plato, precio, ammount) {
+function addItem(uid, plato, precio, ) {
   this.id = uid;
   this.plato = plato;
   this.precio = precio;
-  this.ammount = ammount;
+  
 }
 
 const Delivery = () => {
@@ -16,7 +16,7 @@ const Delivery = () => {
 
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
-  const [ammount, setAmmount] = useState()
+  const [ammount, setAmmount] = useState();
   const loader = async () => {
     const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
     setData(menu.data);
@@ -48,11 +48,11 @@ const Delivery = () => {
   useEffect(() => {
     // console.log(items);
     // itemAmmount()
-    setAmmount(items.length)
+    setAmmount(items.length);
   }, [items]);
 
   const handleItems = (item) => {
-    setItems([...items, new addItem(item.uid, item.plato, item.precio, 1)]);
+    setItems([...items, new addItem(item.uid, item.plato, item.precio)]);
   };
 
   const title = () => {
@@ -80,7 +80,6 @@ const Delivery = () => {
   const removeFromCart = (data) => {
     setItems(data);
   };
-
 
   // const itemAmmount = () =>{
   //   console.log(items)
@@ -131,27 +130,31 @@ const Delivery = () => {
       {data && data.length > 0 ? (
         <div className="row menu-cart-holder d-flex">
           <div className="fixed-top delivery-btn-holder">
-           
-              <button
-                id="sidebarCollapse"
-                data-bs-toggle="offcanvas"
-                data-bs-target="#offcanvas"
-                role="button"
-                aria-label="Toggle menu"
-                className="no-deco"
-              >
-                <i className="fa-solid fa-utensils menu-ico "></i>
-              </button>
-            
-            
-              <button
-                className="no-deco"
-                data-bs-toggle="modal"
-                data-bs-target="#cartModal"
-              >
-                <i className="fa-solid fa-cart-shopping cart-ico  "><span className="badge">{ammount}</span></i>
-              </button>
-            
+            <button
+              id="sidebarCollapse"
+              data-bs-toggle="offcanvas"
+              data-bs-target="#offcanvas"
+              role="button"
+              aria-label="Toggle menu"
+              className="no-deco"
+            >
+              <i className="fa-solid fa-utensils menu-ico "></i>
+            </button>
+
+            <button
+              className="no-deco"
+              data-bs-toggle="modal"
+              data-bs-target="#cartModal"
+            >
+              <i className="fa-solid fa-cart-shopping cart-ico  ">
+                {" "}
+                {ammount > 0 ? (
+                  <span className="badge">{ammount}</span>
+                ) : (
+                  ""
+                )}{" "}
+              </i>
+            </button>
           </div>
         </div>
       ) : (
