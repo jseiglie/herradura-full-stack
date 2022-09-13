@@ -38,14 +38,21 @@ const NavBar = () => {
             <li className="nav-item">
               <Link className="nav-link" to={"/menu"}>
                 <HashLink className="nav-link" to={"/menu"}>
-                  <span className="nav-span">A la Carta</span>
+                  <span className="nav-span">La Carta</span>
                 </HashLink>
               </Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link" to={"/delivery"}>
                 <HashLink className="nav-link" to={"/delivery"}>
-                  <span className="nav-span">A la Casa</span>
+                  <span className="nav-span">Para Casa</span>
+                </HashLink>
+              </Link>
+            </li>
+            <li className="nav-item">
+              <Link className="nav-link" to={"/delivery"}>
+                <HashLink className="nav-link" to={"/pickup"}>
+                  <span className="nav-span">Para Recoger</span>
                 </HashLink>
               </Link>
             </li>

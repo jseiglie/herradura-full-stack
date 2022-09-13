@@ -15,16 +15,32 @@ function App() {
   return (
     <div className="App">
       <BrowserRouter>
-      <NavBar />
+        <NavBar />
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
-          <Route path="/delivery" element={<Delivery />} />
+          <Route
+            path="/delivery"
+            element={
+              <h1
+                style={{
+                  height: "80vh",
+                  display: "flex",
+                  justifyContent: "center",
+                  alignItems: "center",
+                }}
+              >
+                Proximamente...
+              </h1>
+            }
+          />
+          <Route path="/pickup" element={<Delivery />} />
+
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/edit/:id" element={<Edit/>}/>
-          <Route path="/add" element={<Edit/>}/>
+          <Route path="/edit/:id" element={<Edit />} />
+          <Route path="/add" element={<Edit />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>
