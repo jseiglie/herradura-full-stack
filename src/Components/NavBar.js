@@ -38,7 +38,7 @@ const NavBar = () => {
             <li className="nav-item">
               <Link className="nav-link" to={"/menu"}>
                 <HashLink className="nav-link" to={"/menu"}>
-                  <span className="nav-span">A la Carta</span>
+                  <span className="nav-span">La Carta</span>
                 </HashLink>
               </Link>
             </li>
@@ -47,7 +47,7 @@ const NavBar = () => {
                 <HashLink className="nav-link" to={"/delivery"}> */}
               <div className="nav-link">
                 <div className="nav-link">
-                  <span className="nav-span"  onClick={e=>alert("proximamente")}>A la Casa</span>
+                  <span className="nav-span"  onClick={e=>alert("proximamente")}>Para Casa</span>
                 </div>
               </div>
               {/* </HashLink>

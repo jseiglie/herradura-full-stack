@@ -19,7 +19,7 @@ const News = () => {
     {
         "uid": "0495d314-2482-11ed-a49a-50ebf6c32832",
         "plato": "Taco Mexicano de Cerdo (Ración)",
-        "descripcion": "8 Tacos Mexicano de Cerdo",
+        "descripcion": "4 Tacos Mexicano de Cerdo",
         "precio": 9.95,
         "vegano": false,
         "disponible": true,
@@ -47,7 +47,7 @@ const News = () => {
     {
         "uid": "253bc98b-2482-11ed-a49a-50ebf6c32832",
         "plato": "Taco Mexicano de Ternera (Ración)",
-        "descripcion": "8 Tacos Mexicano de Ternera",
+        "descripcion": "4 Tacos Mexicano de Ternera",
         "precio": 9.95,
         "vegano": false,
         "disponible": true,
@@ -61,7 +61,7 @@ const News = () => {
     {
         "uid": "253bd48d-2482-11ed-a49a-50ebf6c32832",
         "plato": "Taco Mexicano de Pollo (Ración)",
-        "descripcion": "8 Tacos Mexicano de Cerdo",
+        "descripcion": "4 Tacos Mexicano de Cerdo",
         "precio": 9.95,
         "vegano": false,
         "disponible": true,

@@ -28,7 +28,7 @@ const Menu = () => {
               className="download-item-box  "
               href={require("../menu/carta.pdf")}
             >
-              <span className="download-item">Menu Completo</span>
+              <span className="download-item">La Carta</span>
             </a>
           </div>
           <div className="col-xl-3 col-lg-3 col-md-6 col-sm-12 menu-download-link download-cerveza d-flex">

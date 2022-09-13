@@ -11,7 +11,7 @@ const MenuBanner = () => {
               <div className="menu-carta w-100">
                 <span className="menu-text">
                   <Link className="no-deco" to={"/menu"}>
-                    A la Carta
+                   La Carta
                   </Link>
                 </span>
               </div>
@@ -23,7 +23,7 @@ const MenuBanner = () => {
                 <span className="menu-text">
                   {/* <Link className="no-deco" to={"/delivery"}> */}
                    <button className="btn no-deco" onClick={e=>alert("proximamente")}>
-                    A Recoger
+                    Para Recoger
                     </button> 
                   {/* </Link> */}
                 </span>
@@ -36,7 +36,7 @@ const MenuBanner = () => {
                 <span className="menu-text">
                   {/* <Link className="no-deco" to={"/delivery"}> */}
                   <button className="btn no-deco" onClick={e=>alert("proximamente")}>
-                    A la Casa
+                    Para Casa
                     </button>
                   {/* </Link> */}
                 </span>
