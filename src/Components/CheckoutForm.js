@@ -5,12 +5,14 @@ import {
   useElements
 } from "@stripe/react-stripe-js";
 
-export default function CheckoutForm() {
+export default function CheckoutForm(props) {
   const stripe = useStripe();
   const elements = useElements();
 
   const [message, setMessage] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
+    let items = [props.items]
+  
 
   useEffect(() => {
     if (!stripe) {
@@ -76,7 +78,12 @@ export default function CheckoutForm() {
     setIsLoading(false);
   };
 
+
+
+
   return (
+<>  
+   
     <form id="payment-form" onSubmit={handleSubmit}>
       <PaymentElement id="payment-element" />
       <button disabled={isLoading || !stripe || !elements} id="submit">
@@ -87,5 +94,7 @@ export default function CheckoutForm() {
       {/* Show any error or success messages */}
       {message && <div id="payment-message">{message}</div>}
     </form>
+   
+</>
   );
 }

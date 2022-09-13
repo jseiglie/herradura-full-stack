@@ -3,87 +3,146 @@ import PropTypes from "prop-types";
 import { useNavigate } from "react-router-dom";
 
 const Cart = (props) => {
-  const cartItems = [props.items];
-  const [total, setTotal] = useState();
+  let cartItems = [props.items];
+  
+  const [items, setItems] = useState([cartItems[0]]);
   const [subtotal, setSubtotal] = useState([]);
-  const [ammount, setAmmount] = useState(1);
+  const [cleanCart, setCleanCart] = useState([])
   const navigate = useNavigate();
+
   useEffect(() => {
     debt();
-  }, [cartItems]);
+    amountOfItems();
+    console.log("cartItems", cartItems)
+   
+  }, [items]);
+
+
+  const clean = ()=>{
+    let data = cartItems[0]
+    let jsonObj = data.map(JSON.stringify)
+    let uniqueSet = new Set(jsonObj);
+    let result= Array.from(uniqueSet).map(JSON.parse)
+   return(result)
+    
+  }
+  
+
 
   const debt = () => {
     let arr = [];
     let temp;
     let result;
-    cartItems[0].forEach((element) => {
-      // console.log(element);
-      for (let key in element) {
-        //console.log(key + "----" + JSON.stringify( element))
-        temp = JSON.stringify(element);
-        result = JSON.parse(temp);
-      }
-      arr.push(result.precio);
-      //console.log("array ----- " + arr);
-      setSubtotal(arr.reduce((a, b) => a + b).toFixed(2));
-      //console.log(subtotal);
-      //console.log(result.precio)
-      //setSubtotal(subtotal.push(result.precio))
-    });
+    if (cartItems[0].length > 1) {
+      cartItems[0].forEach((element) => {
+        // console.log(element);
+        for (let key in element) {
+          //console.log(key + "----" + JSON.stringify( element))
+          temp = JSON.stringify(element);
+          result = JSON.parse(temp);
+        }
+        arr.push(result.precio);
+        //console.log("array ----- " + arr);
+        setSubtotal(arr.reduce((a, b) => a + b).toFixed(2));
+        //console.log(subtotal);
+        //console.log(result.precio)
+        //setSubtotal(subtotal.push(result.precio))
+      });
+    }
   };
 
   const handleProcesarPago = (e) => {
     navigate("/checkout");
   };
 
+  const handleEmpty = () => {
+    cartItems = [];
+    props.sendData(cartItems);
+  };
+
+  const deleteCartItem = (e) => {
+    let del;
+    if (cartItems[0].length > 0) {
+      del = cartItems[0].splice(e.target.id, 0);
+      props.deleteCartItem(del);
+    }
+    if ((cartItems[0].length = 0)) {
+      del = [];
+      props.deleteCartItem(del);
+    }
+  };
+
+  const amountOfItems = (id) =>
+    cartItems[0].filter((item) => item.id === id).length;
+
+  const addToCart = (item) => {
+    console.log(item)
+    cartItems[0] = [...cartItems[0], item];
+    console.log(cartItems[0])
+    props.sendAdd(cartItems);
+  };
+
+  const removeFromCart = (e) => {
+    const indexOfItemToRemove = cartItems[0].findIndex(
+      (cartItem) => cartItem.id === e.target.id
+    );
+    console.log(cartItems[0]);
+    props.removeFromCart([
+      ...cartItems[0].slice(0, indexOfItemToRemove),
+      ...cartItems[0].slice(indexOfItemToRemove + 1),
+    ]);
+  };
+
+
+
+  //console.log(final)
+
   return (
     <div className="modal-content">
-      <div className="modal-header">
+      <div className="modal-header pt-0 pb-0 bg-dark text-white ">
         <h5 className="modal-title" id="exampleModalLabel">
           Revisar Pedido
         </h5>
         <button
-          type="button"
-          className="btn-close"
+          className="btn btn-modal-close p-0"
           data-bs-dismiss="modal"
           aria-label="Close"
-        ></button>
+        >
+          <i className="fa-solid fa-square-xmark fa-lg text-danger"></i>
+        </button>
       </div>
       <div className="modal-body">
         {cartItems[0].length > 0
-          ? cartItems[0].map((item, i) => (
+          ? clean().map((item, i) => (
               <div key={i}>
                 <div key={i} className="row">
-                  <div className="col-6">{item.plato}</div>
+                  <div className="col-7">{item.plato}</div>
                   <div className="col-3">
                     <i
-                      onClick={(e) => setAmmount(ammount - 1)}
-                      className="fa-solid fa-minus"
-                    ></i>{" "}
-                    {ammount}{" "}
-                    <i
-                      onClick={(e) => setAmmount(ammount + 1)}
-                      className="fa-solid fa-plus"
-                    ></i>
-                  </div>
-                  <div className="col-2">{item.precio}</div>
-                  <div className="col-1">
-                    <i
                       id={item.id}
-                      className="dash-ico fa-regular fa-trash-can"
-                      onClick={(e) => console.log(e.target.id)}
+                      onClick={(e) => removeFromCart(e)}
+                      className="fa-solid fa-minus  p-1"
+                    ></i>{" "}
+                    {amountOfItems(item.id)}{" "}
+                    <i
+                      onClick={(e) => addToCart(item)}
+                      className="fa-solid fa-plus  p-1"
                     ></i>
                   </div>
+                  <div className="col-2">
+                    {(amountOfItems(item.id) * item.precio).toFixed(2)}
+                  </div>
+                 
                 </div>
               </div>
             ))
           : "Aun no has añadido nada a la cesta"}
         {cartItems[0].length > 0 ? (
           <div className="row">
-            <div className="col-6"></div>
-            <div className="col-3"></div>
+            <div className="col-10"></div>
+            
             <div className="col-2">Total: {subtotal}</div>
-            <div className="col-1"></div>
+            
           </div>
         ) : (
           ""
@@ -92,22 +151,28 @@ const Cart = (props) => {
       <div className="modal-footer">
         <button
           type="button"
-          className="btn btn-danger"
+          className="btn btn-secondary"
           data-bs-dismiss="modal"
         >
-          {cartItems[0].length > 0 ? "Cancelar" : "Cerrar"}
+          Cerrar
         </button>
         {cartItems[0].length > 0 ? (
-          <button
-          className="btn btn-success"
-          type="button"
-          onClick={(e) => handleProcesarPago(e)}
-          data-bs-dismiss="modal"
-        >
-          Procesar pago
-        </button>
-        ) : ""}
-        
+          <>
+            <button className="btn btn-danger" onClick={handleEmpty}>
+              Vaciar
+            </button>
+            <button
+              className="btn btn-success"
+              type="button"
+              onClick={(e) => handleProcesarPago(e)}
+              data-bs-dismiss="modal"
+            >
+              Procesar pago
+            </button>
+          </>
+        ) : (
+          ""
+        )}
       </div>
     </div>
   );
@@ -115,6 +180,8 @@ const Cart = (props) => {
 
 Cart.propTypes = {
   items: PropTypes.array,
+  sendData: PropTypes.func,
+  deleteCartItem: PropTypes.func,
 };
 
 export default Cart;

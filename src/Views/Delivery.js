@@ -3,11 +3,11 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Cart from "../Components/Cart";
 
-
-function addItem(uid, plato, precio){
+function addItem(uid, plato, precio, ammount) {
   this.id = uid;
   this.plato = plato;
   this.precio = precio;
+  this.ammount = ammount;
 }
 
 const Delivery = () => {
@@ -16,11 +16,11 @@ const Delivery = () => {
 
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
-
+  const [ammount, setAmmount] = useState()
   const loader = async () => {
     const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
     setData(menu.data);
-    sessionStorage.setItem("menu", JSON.stringify( menu.data))
+    sessionStorage.setItem("menu", JSON.stringify(menu.data));
 
     const cat = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(cat.data);
@@ -46,18 +46,13 @@ const Delivery = () => {
   }, [catego]);
 
   useEffect(() => {
-   // console.log(items);
+    // console.log(items);
+    // itemAmmount()
+    setAmmount(items.length)
   }, [items]);
 
-  const handleItems = (e) => {
-    
-    const id = (e.target.id)
-
-    const result = data.filter((item)=> item.uid === id)
-    //console.log(result[0].uid)
-    
-    setItems([...items, new addItem(result[0].uid, result[0].plato, result[0].precio)]);
-    //console.log(items)
+  const handleItems = (item) => {
+    setItems([...items, new addItem(item.uid, item.plato, item.precio, 1)]);
   };
 
   const title = () => {
@@ -65,6 +60,38 @@ const Delivery = () => {
     return result[0].catego;
   };
 
+  const cardCat = (item) => {
+    let result = categories.filter((el) => el.uid === item);
+    return result[0]?.catego;
+  };
+
+  const sendData = (data) => {
+    setItems(data);
+  };
+
+  const deleteCartItem = (data) => {
+    setItems(data);
+  };
+
+  const sendAdd = ([data]) => {
+    setItems(data);
+  };
+
+  const removeFromCart = (data) => {
+    setItems(data);
+  };
+
+
+  // const itemAmmount = () =>{
+  //   console.log(items)
+  //   let jsonObj = items.map(JSON.stringify)
+  //   console.log(jsonObj)
+  //   let uniqueSet = new Set(jsonObj);
+  //   console.log(uniqueSet)
+  //   let result= Array.from(uniqueSet).map(JSON.parse)
+  //   console.log(result.length)
+  //   return result.length
+  // }
   return (
     <div className="container-fluid  gx-0">
       <h1 className="p-3">{catego ? title(catego) : "Menu"}</h1>
@@ -102,23 +129,30 @@ const Delivery = () => {
         </div>
       </nav>
       {data && data.length > 0 ? (
-        <div className="row menu-cart-holder">
-          <button
-            id="sidebarCollapse"
-            data-bs-toggle="offcanvas"
-            data-bs-target="#offcanvas"
-            role="button"
-            aria-label="Toggle menu"
-            className="gx-0 p-0 mx-0"
-          >
-            Menu
-          </button>
-          <span>
-            <button className="no-deco"  data-bs-toggle="modal"
-        data-bs-target="#exampleModal">
-              <i className="fa-solid fa-cart-shopping cart-ico rotate"></i>
-            </button>
-          </span>
+        <div className="row menu-cart-holder d-flex">
+          <div className="fixed-top delivery-btn-holder">
+           
+              <button
+                id="sidebarCollapse"
+                data-bs-toggle="offcanvas"
+                data-bs-target="#offcanvas"
+                role="button"
+                aria-label="Toggle menu"
+                className="no-deco"
+              >
+                <i className="fa-solid fa-utensils menu-ico "></i>
+              </button>
+            
+            
+              <button
+                className="no-deco"
+                data-bs-toggle="modal"
+                data-bs-target="#cartModal"
+              >
+                <i className="fa-solid fa-cart-shopping cart-ico  "><span className="badge">{ammount}</span></i>
+              </button>
+            
+          </div>
         </div>
       ) : (
         <>
@@ -135,6 +169,7 @@ const Delivery = () => {
                 className="col-xl-2 col-lg-3 col-md-4 col-sm-12 card-group mb-3"
               >
                 <div className="card card-wrap scale">
+                  {cardCat(item.id_catego2)}
                   <div className="card-body">
                     <div className="row">
                       {item.img ? (
@@ -181,7 +216,7 @@ const Delivery = () => {
                             <i
                               id={item.uid}
                               className="fa-solid fa-cart-arrow-down fa-xl footer-cart-ico rotate"
-                              onClick={(e) => handleItems(e)}
+                              onClick={(e) => handleItems(item)}
                             ></i>
                           </span>
                         </div>
@@ -197,26 +232,22 @@ const Delivery = () => {
         </div>
       </div>
 
-      {/* <!-- Button trigger modal --> */}
-      <button
-        type="button"
-        className="btn btn-primary"
-        data-bs-toggle="modal"
-        data-bs-target="#exampleModal"
-      >
-        Launch demo modal
-      </button>
-
       {/* <!-- Modal --> */}
       <div
         className="modal fade"
-        id="exampleModal"
+        id="cartModal"
         tabIndex="-1"
-        aria-labelledby="exampleModalLabel"
+        aria-labelledby="cartModalLabel"
         aria-hidden="true"
       >
-        <div className="modal-dialog">
-          <Cart items={items} />
+        <div className="modal-dialog modal-dialog-centered modal-dialog-scrollable">
+          <Cart
+            items={items}
+            sendData={sendData}
+            deleteCartItem={deleteCartItem}
+            sendAdd={sendAdd}
+            removeFromCart={removeFromCart}
+          />
         </div>
       </div>
     </div>
