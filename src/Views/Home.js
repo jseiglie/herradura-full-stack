@@ -11,9 +11,9 @@ const Home = () => {
         <div className="container-fluid d-flex gx-0">
           <div className="header d-flex">
             <h1 className="main-title">La Herradura Vinoteca</h1> <br />
-            <h3 className="main-title sub-title">
+            <h4 className="main-title sub-title">
               El bar de siempre, un poco diferente
-            </h3>
+            </h4>
           </div>
         </div>
       </section>

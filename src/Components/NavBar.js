@@ -6,7 +6,7 @@ const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-holder sticky-top">
       <div className="container-fluid">
-        <a className="navbar-brand" href="#">
+        <a className="navbar-brand" href="/">
           <img
             src="./img/herradura_logo.webp"
             alt="La Herradura Vinoteca Logo"
@@ -59,7 +59,7 @@ const NavBar = () => {
             <li className="nav-item">
               <Link className="nav-link" to={"/menu"}>
                 <HashLink className="nav-link" to={"/#about"}>
-                  <span className="nav-span">A Nosotros</span>
+                  <span className="nav-span">Nosotros</span>
                 </HashLink>
               </Link>
             </li>
