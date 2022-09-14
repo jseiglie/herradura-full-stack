@@ -513,12 +513,30 @@ background-position: center;
 }
 
 .checkout-wrapper{
-  height: 80vh;
   display: flex;
     flex-direction: column;
     justify-content: center;
 }
 
+.checkout-destacar{
+  font-weight: bold;
+  font-size: larger;
+  border: 1px solid black;
+  margin: 0.5rem;
+}
+
+.checkout-local-resumen{
+  padding: 1.2rem;
+  font-weight: bold;
+  background-color: #fefde9;
+}
+.order-details-wrapper{
+  border: 1px solid black;
+  margin: 1rem;
+}
+.order-details{
+  list-style: none;
+}
 /**
  * ----------------------------------------
  * animation scale-up-ver-center

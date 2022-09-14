@@ -4,7 +4,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Cart = (props) => {
-  let cartItems = [props.items];
+  
+  let cartItems =  [props.items]
   
   const [items, setItems] = useState([cartItems[0]]);
   const [subtotal, setSubtotal] = useState([]);
@@ -15,15 +16,23 @@ const date = new Date().toISOString().slice(2,19).replace(/-/g,"_")
 const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*1000)
 
   useEffect(() => {
-    debt();
-    
+    debt(); 
     amountOfItems();
     //console.log("cartItems", cartItems)
     console.log(items)
-
-    
   }, [cartItems[0]]);
 
+  useEffect(() => {
+    console.log(items)
+  }, [items]);
+
+  
+  useEffect(()=>{
+    // if (sessionStorage.getItem("payload")){
+    //   tmp = JSON.parse(sessionStorage.getItem("payload"))
+    //   setItems(tmp.data)
+    //   }
+  },[])
 
   const clean = ()=>{
     let data = cartItems[0]
@@ -58,14 +67,16 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
   };
 
   const handleProcesarPago = async (e) => {
-    console.log(cartItems[0])
+    
     const payload = {data: cartItems[0], number: ran, total: subtotal}
     console.log(payload)
+    sessionStorage.setItem("payload", JSON.stringify( payload))
     try {
-      await axios.post(
+      const resp = await axios.post(
         `${process.env.REACT_APP_APIURL}/neworder`,
-        payload).then((res)=>console.log(res)).then((res)=>console.log(res))
-      
+        payload)
+        console.log(resp)
+      sessionStorage.setItem("order", JSON.stringify(resp))
       navigate("/checkout");
       
     } catch (error) {

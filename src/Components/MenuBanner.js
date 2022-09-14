@@ -21,7 +21,7 @@ const MenuBanner = () => {
             <div className="pedido-holder">
               <div className="menu-pedido w-100">
                 <span className="menu-text">
-                  <Link className="no-deco" to={"/delivery"}>
+                  <Link className="no-deco" to={"/pickup"}>
                     Para Recoger
                   </Link>
                 </span>

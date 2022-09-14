@@ -3,11 +3,10 @@ import axios from "axios";
 import { Link } from "react-router-dom";
 import Cart from "../Components/Cart";
 
-function addItem(uid, plato, precio, ) {
+function addItem(uid, plato, precio) {
   this.id = uid;
   this.plato = plato;
   this.precio = precio;
-  
 }
 
 const Delivery = () => {
@@ -17,10 +16,14 @@ const Delivery = () => {
   const [categories, setCategories] = useState([]);
   const [items, setItems] = useState([]);
   const [ammount, setAmmount] = useState();
+
   const loader = async () => {
-    const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
-    setData(menu.data);
-    sessionStorage.setItem("menu", JSON.stringify(menu.data));
+  
+      const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
+    //  console.log(menu)
+      setData(menu.data);
+      sessionStorage.setItem("menu", JSON.stringify(menu.data));
+    
 
     const cat = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(cat.data);

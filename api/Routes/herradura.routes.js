@@ -3,7 +3,6 @@ const router = express.Router();
 const db = require("../Config/config");
 const Menu = require("../Models/Menu");
 const User = require("../Models/User");
-const Purchase = require("../Models/Purchases");
 const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
 const bcrypt = require("bcrypt");
@@ -100,7 +99,9 @@ router.put("/modMenu/:id", async (req, res) => {
       precio: precio,
       vegano: vegano,
       disponible: disponible,
-    });
+    }, {where: {
+      uid: id
+    }});
     res.json({ msg: `Se ha modificado correctamente el plato: ${plato}` });
   } catch (error) {
     console.error(`Error al modificar el plato: ${error}`);
@@ -324,9 +325,13 @@ router.get("/purchases", async (req, res) => {
     res.sendStatus(400);
   }
 });
-//Purchases by Client
-router.get("/purchasesByClient", async (req, res) => {
+//Purchases by referencia
+router.get("/purchases/:referencia", async (req, res) => {
+  const {referencia} = req.params
   try {
+    const resp = await Purchases.findOne({where: {referencia: referencia}}
+      )
+      res.json(resp)
   } catch (error) {
     console.error(`Error al pedir todas las compras: ${error}`);
     res.sendStatus(400);
@@ -335,20 +340,40 @@ router.get("/purchasesByClient", async (req, res) => {
 //new purchase
 router.post("/neworder", async (req, res)=>{
   const {data, number, total} = req.body
+  
   let temp = []
   let backprice
   data.forEach(element => {
     temp.push(element.precio)
     backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
   });
-console.log(total)
-  if (total === backprice) {console.log("se cumple")
-  console.log(backprice)
-  res.json(data)
+
+  if (total === backprice) {
+   const resp = await Purchases.create({
+    referencia: number,
+    order: JSON.stringify(data),
+    total: backprice
+   })
+  
+  res.json(resp)
 }
 else {
   res.json({error: "no coincide"})
 }
+})
+
+//complete purchase
+router.put("/complete/:referencia", async (req, res)=>{
+  const {referencia} = req.params
+  const {name, completed} = req.body
+  try {
+    const resp = Purchases.update({
+      name: name,
+      completed: completed
+    },{where: {referencia: referencia}})
+  } catch (error) {
+    res.json({error: error})
+  }
 })
 
 //admin

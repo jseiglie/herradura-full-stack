@@ -3,6 +3,7 @@ import React, { useState, useEffect } from "react";
 import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Components/CheckoutForm";
+import { useNavigate } from "react-router-dom";
 
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
@@ -13,25 +14,46 @@ const stripePromise = loadStripe(
 
 const Checkout = (props) => {
   const [clientSecret, setClientSecret] = useState("");
-  let items = [props.item];
-
+  const [referencia, setReferencia] = useState("");
+  const [details, setDetails] = useState([]);
+  const [databack, setDataback] = useState([])
   const [now, setNow] = useState(false);
   const [local, setLocal] = useState(false);
-  const [name, setName] = useState("")
-
+  const [name, setName] = useState("");
+  const [order, setOrder] = useState([]);
+  const navigate = useNavigate();
 
   useEffect(() => {
+    if (!sessionStorage.getItem("order")) {
+      alert("Debe de realizar una pedido para visualizar esta página");
+      navigate("/pickup");
+      //console.log(sessionStorage.getItem("order"))
+    }
+
+
+    
+    let temp = [JSON.parse(sessionStorage.getItem("order"))];
+    setOrder(temp[0].data);
+    console.log(order);
+    //console.log(temp[0].data.referencia)
+    let str = temp[0].data.referencia.substring(18, 24);
+    //console.log(str);
+    setReferencia(str);
+    setDetails(JSON.parse(temp[0].data.order));
     // Create PaymentIntent as soon as the page loads
+    checkdb()
+  
     fetch("http://localhost:3001/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items: [{ id: "price_1LZbmXIPsB2uwGnPsNjq5Iqr" }],
+        items: [{ id: "price_1LZbmXIPsB2uwGnPsNjq5Iqr" }], 
       }),
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
   }, []);
+
 
   const appearance = {
     theme: "stripe",
@@ -52,9 +74,30 @@ const Checkout = (props) => {
     setLocal(true);
   };
 
-const handleSubmit = (e) =>{
-  console.log(e)
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    const values ={
+      name: name,
+      completed: true
+    }
+    const resp = await axios.put(`${process.env.REACT_APP_APIURL}/complete/${order.referencia}`, values)
+    console.log(resp);
+  };
+
+  const amountOfItems = (id) => details.filter((item) => item.id === id).length;
+
+const checkdb = async () =>{
+  const resp= await axios.get(`${process.env.REACT_APP_APIURL}/purchases/${order.referencia}`)
+    console.log(resp.data)
 }
+
+  const clean = () => {
+    let data = details;
+    let jsonObj = data.map(JSON.stringify);
+    let uniqueSet = new Set(jsonObj);
+    let result = Array.from(uniqueSet).map(JSON.parse);
+    return result;
+  };
 
   return (
     <div className="checkout-wrapper">
@@ -71,21 +114,65 @@ const handleSubmit = (e) =>{
           </button>
         </div>
       </div>
-      {now == true
-        ? clientSecret && (
-            <Elements options={options} stripe={stripePromise}>
-              <CheckoutForm />
-            </Elements>
-          )
-        : <div className="container">
-        <form onSubmit={handleSubmit}>
-          <label htmlFor="name">Introduzca su nombre:</label>
-          <input id="name" className="form-control" placeholder="Su nombre" onChange={e=>setName(e.target.value)}/>
-          {`Deberá de abonar: `} 
-          {console.log(items)}
-          <input type="submit" value="enviar"/>
-        </form>
-        </div>}
+      {now == true ? (
+        clientSecret && (
+          <Elements options={options} stripe={stripePromise}>
+            <CheckoutForm />
+          </Elements>
+        )
+      ) : (
+        <div className="container">
+          <form onSubmit={handleSubmit}>
+            <label htmlFor="name">Introduzca su nombre:</label>
+            <input
+              id="name"
+              className="form-control w-25 mx-auto"
+              placeholder="Su nombre"
+              onChange={(e) => {
+                e.preventDefault();
+                setName(e.target.value);
+              }}
+            />
+            <div className="container ">
+              <div className=" m-5 checkout-local-resumen">
+                {name ? (
+                  <><h1>~Resumen~</h1>
+                    Hola {name}! <br />
+                    Gracias por haber elegido La Herradura Vinoteca. Encontrará
+                    los datos para recoger a continuación:{" "}
+                    <div className="checkout-destacar row d-flex">
+                      <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6">
+                        <div className="order-details-wrapper"> ~ Detalles ~
+                        <ul>
+                          {clean().map((item) => (
+                            <li className="order-details" key={item.id}>
+                              {item.plato} x {amountOfItems(item.id)}
+                            </li>
+                          ))}
+                        </ul>
+                        </div>
+                      </div>
+                      <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 p-2">
+                        Número de Pedido: {referencia}
+                        <br />A nombre de: {name}
+                        <br />
+                        Total: {order.total} €
+                      </div>
+                    </div>
+                    <input
+                      className="btn btn-success"
+                      type="submit"
+                      value="enviar"
+                    />
+                  </>
+                ) : (
+                  ""
+                )}
+              </div>
+            </div>
+          </form>
+        </div>
+      )}
     </div>
   );
 };
