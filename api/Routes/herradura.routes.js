@@ -8,7 +8,7 @@ const Categories = require("../Models/Categories");
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/authmiddleware");
-
+const Mail = require("../Utils/mailCtrl")
 const stripe = require("stripe")(
   "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
 );
@@ -365,16 +365,19 @@ else {
 //complete purchase
 router.put("/complete/:referencia", async (req, res)=>{
   const {referencia} = req.params
-  const {name, completed} = req.body
+  const {name, mail, completed} = req.body
   try {
     const resp = Purchases.update({
       name: name,
+      mail: mail,
       completed: completed
     },{where: {referencia: referencia}})
   } catch (error) {
     res.json({error: error})
   }
 })
+
+router.post("/sendmail", Mail.sendEmail)
 
 //admin
 router.post("/admin", async (req, res) => {

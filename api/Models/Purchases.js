@@ -16,6 +16,10 @@ const Purchases = db.define("Purchases", {
     type: Sequelize.STRING,
     allowNull: true,
   },
+  email:{
+    type: Sequelize.STRING,
+    allowNull: true,
+  },
   order: {
     type: Sequelize.STRING,
     allowNull: false,
