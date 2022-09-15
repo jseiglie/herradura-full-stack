@@ -45,25 +45,29 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
   
 
   const debt = () => {
+    
     let arr = [];
     let temp;
     let result;
-    if (cartItems[0].length > 1) {
+    if (cartItems[0].length > 0) {
       cartItems[0].forEach((element) => {
         // console.log(element);
         for (let key in element) {
           //console.log(key + "----" + JSON.stringify( element))
           temp = JSON.stringify(element);
+          console.log()
           result = JSON.parse(temp);
+          
         }
         arr.push(result.precio);
         //console.log("array ----- " + arr);
         setSubtotal(arr.reduce((a, b) => a + b).toFixed(2));
-        //console.log(subtotal);
+        console.log(subtotal);
         //console.log(result.precio)
         //setSubtotal(subtotal.push(result.precio))
       });
-    }
+    } 
+    console.log(subtotal)
   };
 
   const handleProcesarPago = async (e) => {
@@ -116,12 +120,13 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
   const removeFromCart = (e) => {
     const indexOfItemToRemove = cartItems[0].findIndex(
       (cartItem) => cartItem.id === e.target.id
-    );
-    console.log(cartItems[0]);
-    props.removeFromCart([
-      ...cartItems[0].slice(0, indexOfItemToRemove),
-      ...cartItems[0].slice(indexOfItemToRemove + 1),
-    ]);
+      );
+      console.log(cartItems[0]);
+      props.removeFromCart([
+        ...cartItems[0].slice(0, indexOfItemToRemove),
+        ...cartItems[0].slice(indexOfItemToRemove + 1),
+      ]);
+      setItems(cartItems[0])
   };
 
 

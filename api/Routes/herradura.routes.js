@@ -429,28 +429,30 @@ router.get("/auth", validateToken, (req, res) => {
 });
 
 const calculateOrderAmount = (items) => {
-  // Replace this constant with a calculation of the order's amount
-  // Calculate the order total on the server to prevent
-  // people from directly manipulating the amount on the client
- console.log(items)
-  return 1400;
-};
+  let temp =[];
+ let backprice = ""
 
+ //console.log("before foreach", items)
+ items.items.forEach(element => {
+  temp.push(element.precio)
+ // console.log("temp ", temp)
+  backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
+});
+console.log(backprice)
+
+  return backprice*100;
+} 
+      
 router.post("/create-payment-intent", async (req, res) => {
-  const { items } = req.body;
-
+  const items  = req.body;
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: calculateOrderAmount(items),
-    currency: "eur",
-    automatic_payment_methods: {
-      enabled: false,
-    },
+    currency: "eur"
   });
 
   res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
+    clientSecret: paymentIntent.client_secret
+  }); 
 });
-
-module.exports = router;
+module.exports = router; 

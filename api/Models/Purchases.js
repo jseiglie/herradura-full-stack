@@ -1,6 +1,5 @@
 const Sequelize = require("sequelize");
 const db = require("../Config/config");
-const User = require("./User");
 
 const Purchases = db.define("Purchases", {
   uid: {
@@ -16,7 +15,7 @@ const Purchases = db.define("Purchases", {
     type: Sequelize.STRING,
     allowNull: true,
   },
-  email:{
+  mail:{
     type: Sequelize.STRING,
     allowNull: true,
   },

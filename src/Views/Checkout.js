@@ -8,11 +8,11 @@ import { useNavigate } from "react-router-dom";
 // Make sure to call loadStripe outside of a component’s render to avoid
 // recreating the Stripe object on every render.
 // This is your test publishable API key.
-const stripePromise = loadStripe(
+const promise = loadStripe(
   "pk_test_51Jub2MIPsB2uwGnPRHuBviGhVXe4EpAfloWRqrilwGWsBIwCQ5P2ghkrEP7mnEvsyfVN29ANaNobqvbIpX517fQy00bObYXVug"
 );
 
-const Checkout = (props) => {
+const Checkout = () => {
   const [clientSecret, setClientSecret] = useState("");
   const [referencia, setReferencia] = useState("");
   const [details, setDetails] = useState([]);
@@ -21,7 +21,9 @@ const Checkout = (props) => {
   const [local, setLocal] = useState(false);
   const [name, setName] = useState("");
   const [order, setOrder] = useState([]);
-  const [email, setEmail] = useState("")
+  const [email, setEmail] = useState("");
+  const [dbReferencia, setDbReferencia] = useState();
+  const [display, setDisplay] = useState("show")
   const navigate = useNavigate();
   let mailOrder = [];
 
@@ -33,23 +35,27 @@ const Checkout = (props) => {
     }
 
     let temp = [JSON.parse(sessionStorage.getItem("order"))];
-    setOrder(temp[0].data);
-    console.log(order);
+    let strobj = JSON.parse(temp[0].data.order)
+    setDataback("");
+    setOrder(temp[0].data.order);
+    setDbReferencia(temp[0].data.referencia);
     //console.log(temp[0].data.referencia)
     let str = temp[0].data.referencia.substring(18, 24);
     //console.log(str);
     setReferencia(str);
     setDetails(JSON.parse(temp[0].data.order));
-    // Create PaymentIntent as soon as the page loads
+    console.log("details", JSON.parse(temp[0].data.order));
     checkdb();
+    console.log("cheack", Array.isArray(details))
+    // Create PaymentIntent as soon as the page loads
 
     fetch("http://localhost:3001/api/create-payment-intent", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({
-        items: [{ id: "price_1LZbmXIPsB2uwGnPsNjq5Iqr" }],
+        items: strobj,
       }),
-    })
+    })  
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
   }, []);
@@ -65,12 +71,14 @@ const Checkout = (props) => {
   const handleOnline = (e) => {
     setNow(true);
     setLocal(false);
+    setDisplay("hide")
     console.log();
   };
 
   const handleLocal = (e) => {
     setNow(false);
     setLocal(true);
+    setDisplay("hide")
   };
 
   const clean = () => {
@@ -93,7 +101,7 @@ const Checkout = (props) => {
       order: mailOrder,
       mail: email,
       name: name,
-      referencia: referencia
+      referencia: referencia,
     };
     try {
       // const resp = await axios.put(`${process.env.REACT_APP_APIURL}/complete/${order.referencia}`, values)
@@ -111,35 +119,38 @@ const Checkout = (props) => {
 
   const checkdb = async () => {
     const resp = await axios.get(
-      `${process.env.REACT_APP_APIURL}/purchases/${order.referencia}`
+      `${process.env.REACT_APP_APIURL}/purchases/${dbReferencia}`
     );
-    console.log(resp.data);
+    console.log("checkdb ", resp.data);
   };
 
   return (
-    <div className="checkout-wrapper">
-      <h1>¿Cómo desea realizar el pago?</h1>
-      <div className="container btn-group-checkout d-flex">
-        <div className="pay-now">
-          <button className="btn btn-pay-now" onClick={(e) => handleOnline(e)}>
+    <div className="container checkout-wrapper">
+      <h1 className="p-3">¿Cómo desea realizar el pago?</h1>
+
+      <div className="row btn-group-wrapper">
+        <div className="col-sm-12 col-md-5 col-lg-5 col-xl-5 pay-now">
+          <div className="btn btn-pay-now" onClick={(e) => handleOnline(e)}>
             <span className="menu-text">Pagar ahora</span>
-          </button>
+          </div>
         </div>
-        <div className="pay-local">
-          <button className="btn btn-pay-local" onClick={(e) => handleLocal(e)}>
+        <div className="col-sm-12 col-md-5 col-lg-5 col-xl-5 pay-local">
+          <div className="btn btn-pay-local" onClick={(e) => handleLocal(e)}>
             <span className="menu-text">Pagar en local</span>
-          </button>
+          </div>
         </div>
       </div>
-      {now === true ? (
-        clientSecret && (
-          <Elements options={options} stripe={stripePromise}>
-            <CheckoutForm />
-          </Elements>
-        )
-      ) : (
+      <div className={`checkout-space ${display}`}></div>
+      {now === true
+        ? clientSecret && (
+            <Elements stripe={promise}>
+              <CheckoutForm />
+            </Elements>
+          )
+        : ""}
+      {local === true ? (
         <div className="container">
-          <form onSubmit={handleSubmit}>
+          <form className="p-5" onSubmit={handleSubmit}>
             <label htmlFor="name">Introduzca su nombre:</label>
             <input
               id="name"
@@ -162,8 +173,8 @@ const Checkout = (props) => {
               }}
               required
             />
-            <div className="container ">
-              <div className=" m-5 checkout-local-resumen">
+            <div className="container-fluid">
+              <div className=" m-5 w-100 mx-auto checkout-local-resumen">
                 {name && email ? (
                   <>
                     <h1>~Resumen~</h1>
@@ -195,8 +206,10 @@ const Checkout = (props) => {
                       <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 p-2">
                         Número de Pedido: {referencia}
                         <br />A nombre de: {name}
-                        <br />Email: {email}
-                        <br/>Total: {order.total} €
+                        <br />
+                        Email: {email}
+                        <br />
+                        Total: {order.total} €
                       </div>
                     </div>
                     <input
@@ -212,6 +225,8 @@ const Checkout = (props) => {
             </div>
           </form>
         </div>
+      ) : (
+        ""
       )}
     </div>
   );

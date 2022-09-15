@@ -4,18 +4,15 @@ const OAuth2 = google.auth.OAuth2;
 // email sender function
 
 exports.sendEmail = async (req, res) => {
-    const myOAuth2Client = new OAuth2(
-        "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
-        "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"
-      );
-      myOAuth2Client.setCredentials({
-        refresh_token:
-          "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
-      });
-      const myAccessToken = myOAuth2Client.getAccessToken()
-  
-;
-  
+  const myOAuth2Client = new OAuth2(
+    "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
+    "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"
+  );
+  myOAuth2Client.setCredentials({
+    refresh_token:
+      "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
+  });
+  const myAccessToken = myOAuth2Client.getAccessToken();
 
   //
   const data = req.body.order;
