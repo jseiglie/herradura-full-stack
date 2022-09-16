@@ -24,9 +24,7 @@ const Edit = () => {
           `${process.env.REACT_APP_APIURL}/oneItem/${id}`
         );
         setData(res.data);
-        //  console.log(data)
         setCatego(res.data.id_catego2);
-        //console.log(catego)
       } catch (error) {
         console.log(error);
       }
@@ -36,7 +34,6 @@ const Edit = () => {
   const loadCat = async () => {
     const resp = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(resp.data);
-    //console.log(resp.data)
   };
 
   useEffect(() => {
@@ -44,16 +41,11 @@ const Edit = () => {
     loadCat();
   }, []);
 
-  useEffect(() => {
-    console.log("effect-----" + catego);
-  }, [catego]);
-
   const handleSubmit = (e) => {
     e.preventDefault();
   };
 
   const title = () => {
-    console.log("title" + catego);
     let result = categories.filter((item) => item.uid === catego);
     return result[0].catego;
   };

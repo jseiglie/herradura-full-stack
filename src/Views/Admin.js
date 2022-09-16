@@ -1,7 +1,8 @@
 import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
-import Register from "../Components/Register";
+//import Register from "../Components/Register";
+
 const Admin = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
@@ -20,7 +21,6 @@ const Admin = () => {
           localStorage.setItem("token", res.data.token);
           navigate("/dashboard");
         }
-        console.log(res);
       });
   };
   return (
@@ -64,7 +64,6 @@ const Admin = () => {
               />
               <br/>
               <button className="m-3 btn" type="submit" onClick={handleSubmit}>
-                {" "}
                 Log in
               </button>
             </div>

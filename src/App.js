@@ -2,6 +2,7 @@ import { Route, Routes } from "react-router";
 import { BrowserRouter } from "react-router-dom";
 import FooterH from "./Components/FooterH";
 import NavBar from "./Components/NavBar";
+import Privacy from "./Components/PrivacyText";
 import "./Styles/App.css";
 import Admin from "./Views/Admin";
 import Checkout from "./Views/Checkout";
@@ -35,12 +36,13 @@ function App() {
             }
           />
           <Route path="/pickup" element={<Delivery />} />
-
           <Route path="/checkout" element={<Checkout />} />
           <Route path="/admin" element={<Admin />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/add" element={<Edit />} />
+          <Route path="/politicaprivacidad" element={<Privacy />} />
+          
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>

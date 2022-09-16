@@ -18,7 +18,6 @@ const Delivery = () => {
 
   const loader = async () => {
     const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
-    //  console.log(menu)
     setData(menu.data);
     sessionStorage.setItem("menu", JSON.stringify(menu.data));
 
@@ -34,20 +33,17 @@ const Delivery = () => {
         `${process.env.REACT_APP_APIURL}/bycategory/${id}`
       );
       setData(resp.data);
-      // console.log("catego despues del get: " + catego);
     }
   };
   useEffect(() => {
     loader();
   }, []);
   useEffect(() => {
-    loadCat(catego);
-    //  console.log("catego useEffect: " + catego);
+    loadCat(catego);// eslint-disable-next-line
   }, [catego]);
 
   useEffect(() => {
-    // console.log(items);
-    // itemAmmount()
+
     setAmmount(items.length);
   }, [items]);
 
@@ -76,21 +72,9 @@ const Delivery = () => {
   const sendAdd = ([data]) => {
     setItems(data);
   };
-
   const removeFromCart = (data) => {
     setItems(data);
   };
-
-  // const itemAmmount = () =>{
-  //   console.log(items)
-  //   let jsonObj = items.map(JSON.stringify)
-  //   console.log(jsonObj)
-  //   let uniqueSet = new Set(jsonObj);
-  //   console.log(uniqueSet)
-  //   let result= Array.from(uniqueSet).map(JSON.parse)
-  //   console.log(result.length)
-  //   return result.length
-  // }
   return (
     <div className="container-fluid  gx-0">
       <h1 className="p-3">{catego ? title(catego) : "Menu"}</h1>

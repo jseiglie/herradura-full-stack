@@ -4,8 +4,7 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Cart = (props) => {
-  let cartItems = [props.items];
-
+  let cartItems = [props.items];// eslint-disable-next-line
   const [items, setItems] = useState([cartItems[0]]);
   const [subtotal, setSubtotal] = useState([]);
   const navigate = useNavigate();
@@ -18,19 +17,11 @@ const Cart = (props) => {
 
   useEffect(() => {
     debt();
-    amountOfItems();
-  
-    console.log(items);
+    amountOfItems();// eslint-disable-next-line
   }, [cartItems[0]]);
 
-  useEffect(() => {
-    console.log(items);
-  }, [items]);
-
   const clean = () => {
-    let data = cartItems[0];
-    let jsonObj = data.map(JSON.stringify);
-    let uniqueSet = new Set(jsonObj);
+    let uniqueSet = new Set(cartItems[0].map(JSON.stringify));
     let result = Array.from(uniqueSet).map(JSON.parse);
     return result;
   };
@@ -40,10 +31,9 @@ const Cart = (props) => {
     let temp;
     let result;
     if (cartItems[0].length > 0) {
-      cartItems[0].forEach((element) => {
+      cartItems[0].forEach((element) => {// eslint-disable-next-line
         for (let key in element) {
           temp = JSON.stringify(element);
-          console.log();
           result = JSON.parse(temp);
         }
         arr.push(result.precio);
@@ -54,19 +44,16 @@ const Cart = (props) => {
 
   const handleProcesarPago = async (e) => {
     const payload = { data: cartItems[0], number: ran, total: subtotal };
-    console.log(payload);
     sessionStorage.setItem("payload", JSON.stringify(payload));
     try {
       const resp = await axios.post(
         `${process.env.REACT_APP_APIURL}/neworder`,
         payload
       );
-      console.log(resp);
       sessionStorage.setItem("order", JSON.stringify(resp));
       navigate("/checkout");
     } catch (error) {
       alert("Ha ocurrido un error en el proceso");
-      console.log({ error: error });
     }
   };
 
@@ -81,7 +68,6 @@ const Cart = (props) => {
 
   const addToCart = (item) => {
     cartItems[0] = [...cartItems[0], item];
-    console.log(cartItems[0]);
     props.sendAdd(cartItems);
   };
 
@@ -89,7 +75,6 @@ const Cart = (props) => {
     const indexOfItemToRemove = cartItems[0].findIndex(
       (cartItem) => cartItem.id === e.target.id
     );
-    console.log(cartItems[0]);
     props.removeFromCart([
       ...cartItems[0].slice(0, indexOfItemToRemove),
       ...cartItems[0].slice(indexOfItemToRemove + 1),

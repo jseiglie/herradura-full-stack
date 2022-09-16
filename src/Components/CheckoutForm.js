@@ -1,7 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {
-  PaymentElement,
   useStripe,
   useElements,
   CardElement,
@@ -17,27 +16,22 @@ export default function CheckoutForm(props) {
   const [processing, setProcessing] = useState("");
   const [disabled, setDisabled] = useState(true);
   const [clientSecret, setClientSecret] = useState("");
-  const [message, setMessage] = useState();
+  const [message] = useState();
   const navigate = useNavigate();
   const [stripeItems, setStripeItems] = useState();
-  const [dbReferencia, setDbReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia)
-  const [details, setDetails] = useState(props.details)
-  const [referencia, setReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(18, 24))
-  const email = props.email
-
-  const name = props.name
+  const [dbReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia)
+  const [details] = useState(props.details)
+  const [total] = useState(props.total)
+  const [referencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(18, 24))
+  const [email] = useState(props.email)
+  const [name] = useState(props.name)
   
   useEffect(() => {
     
     let temp = JSON.parse(sessionStorage.getItem("order"));
     let strobj = JSON.parse(temp.data.order);
-    //setDetails(JSON.parse(temp.data.order));
-    console.log(JSON.parse(temp.data.order));
     setStripeItems(JSON.parse(temp.data.order));
-    console.log({ items: [{ stripeItems }] });
     // Create PaymentIntent as soon as the page loads
-    //orderDetails()
-    console.log(details)
     window
       .fetch("http://localhost:3001/api/create-payment-intent", {
         method: "POST",
@@ -53,7 +47,7 @@ export default function CheckoutForm(props) {
       })
       .then((data) => {
         setClientSecret(data.clientSecret);
-      });
+      });// eslint-disable-next-line
   }, []);
 
   const handleChange = async (event) => {
@@ -85,6 +79,7 @@ export default function CheckoutForm(props) {
         order: orderDetails(),
         mail: email,
         name: name,
+        total: total,
         referencia: referencia,
       };
       const values = {
@@ -95,7 +90,6 @@ export default function CheckoutForm(props) {
       try {
       await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
       await axios.post(`${process.env.REACT_APP_APIURL}/sendherradura`, mailOpts);
-      console.log(referencia)
       await axios.put(`${process.env.REACT_APP_APIURL}/complete/${dbReferencia}`, values);
     } catch (error) {}
     }
@@ -114,33 +108,34 @@ export default function CheckoutForm(props) {
   const amountOfItems = (id) => details.filter((item) => item.id === id).length;
 
   const orderDetails = () => {
-    let temp = []
+    let temp = []// eslint-disable-next-line
     clean().map((item) => {
       temp.push(item.plato + " x " + amountOfItems(item.id));
-      console.log(temp)
     });
     return temp
   };
 
   return (
     <>
-      <form id="payment-form" onSubmit={handleSubmit}>
+      <form className="my-4 slide-top" id="payment-form" onSubmit={handleSubmit}>
+        <h5 className="mb-3">Introduzca los datos de su tarjeta:</h5> 
+        <p className="form-text">**No almacenamos los datos de su tarjeta**</p>
         <CardElement
           id="card-element"
           onChange={handleChange}
         />
-        <button disabled={processing || disabled || succeeded} id="submit">
+        <button className="btn btn-success mt-4 mx-3 px-5 py-2" disabled={processing || disabled || succeeded} id="submit">
           <span id="button-text">
             {processing ? (
               <div className="spinner" id="spinner"></div>
             ) : (
-              "Pay now"
+              "Pagar ahora"
             )}
           </span>
         </button>
 
         <button
-          className="btn btn-danger m-3 py-2 px-3"
+          className="btn btn-danger mt-4 mx-3 py-2 px-4"
           onClick={(e) => handleCancel}
         >
           Cancelar pedido
@@ -153,19 +148,18 @@ export default function CheckoutForm(props) {
             <div className="bg-danger p-3 my-5">{error}</div>
           </div>
         )}
-
-        {/* MODIFICAR ESTO */}
         {/* Show a success message upon completion */}
         <div className={succeeded ? "result-message" : "result-message hidden"}>
           <div className="bg-success p-3 my-5">
             <b>
-              Su pago se ha realizado satisfactoriamente, gracias por su
+              Su pago se ha realizado satisfactoriamente, revise su bandeja de entrada. Gracias por su
               preferencia.
               <Link to={"/"}>Volver a Home</Link>
             </b>
           </div>
         </div>
       </form>
+      <div className="checkout-space"></div>
     </>
   );
 }

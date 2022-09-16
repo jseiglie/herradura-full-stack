@@ -16,11 +16,18 @@ const Checkout = () => {
   const [now, setNow] = useState(false);
   const [local, setLocal] = useState(false);
   const [name, setName] = useState("");
-  const [order, setOrder] = useState([]);
+  const [total, setTotal] = useState();
   const [email, setEmail] = useState("");
   const [display, setDisplay] = useState("show");
-  const [referencia, setReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(18, 24))
-let mailORder= []
+  const [referencia] = useState(
+    JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(
+      18,
+      24
+    )
+  );
+  const [hideForm, setHideForm] = useState("hide");
+
+  let mailORder = [];
   const navigate = useNavigate();
 
   let dbReferencia;
@@ -31,12 +38,10 @@ let mailORder= []
       navigate("/pickup");
     }
     const temp = [JSON.parse(sessionStorage.getItem("order"))];
-    const strobj = JSON.parse(temp[0].data.order);
-    dbReferencia = temp[0].data.referencia;
-    setOrder(temp[0].data);
-    console.log("order", temp[0].data.total)
+    const strobj = JSON.parse(temp[0].data.order);// eslint-disable-next-line
+    dbReferencia = temp[0].data.referencia;// eslint-disable-next-line
+    setTotal(temp[0].data.total);// eslint-disable-next-line
     setDetails(JSON.parse(temp[0].data.order));
-    console.log("details", JSON.parse(temp[0].data.order));
     checkdb();
 
     fetch("http://localhost:3001/api/create-payment-intent", {
@@ -54,7 +59,6 @@ let mailORder= []
     setNow(true);
     setLocal(false);
     setDisplay("hide");
-    console.log();
   };
 
   const handleLocal = (e) => {
@@ -70,14 +74,13 @@ let mailORder= []
   };
 
   const amountOfItems = (id) => details.filter((item) => item.id === id).length;
-  
+
   const orderDetails = () => {
-    let temp = []
+    let temp = [];// eslint-disable-next-line
     clean().map((item) => {
       temp.push(item.plato + " x " + amountOfItems(item.id));
-      console.log(temp)
     });
-    return temp
+    return temp;
   };
 
   const handleSubmit = async (e) => {
@@ -92,11 +95,11 @@ let mailORder= []
       order: orderDetails(),
       mail: email,
       name: name,
+      total: total,
       referencia: referencia,
     };
     try {
       await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
-      console.log(mailOpts)
       await axios.put(
         `${process.env.REACT_APP_APIURL}/complete/${referencia}`,
         values
@@ -104,23 +107,20 @@ let mailORder= []
     } catch (error) {}
   };
 
-
-
   const checkdb = async () => {
-    const resp = await axios.get(
+    await axios.get(
       `${process.env.REACT_APP_APIURL}/purchases/${dbReferencia}`
     );
-    //console.log("checkdb ", resp.data);
   };
 
   return (
-    <div className="container checkout-wrapper">
+    <div className="container checkout-wrapper slide-top">
       <label className="mt-5 mb-3" htmlFor="email">
-        Introduzca su correo electrónico
+        <h5>Introduzca su correo electrónico</h5>
       </label>
       <input
         type="mail"
-        className="form-control w-50 mx-auto mb-2"
+        className="form-control w-50 mx-auto mb-2 text-center"
         onChange={(e) => {
           e.preventDefault();
           setEmail(e.target.value);
@@ -128,8 +128,8 @@ let mailORder= []
         required
       />
       {email !== "" ? (
-        <>
-          <h1 className="p-3">¿Cómo desea realizar el pago?</h1>
+        <div className="slide-top">
+          <h1 className="p-3 my-4">¿Cómo desea efectuar el pago?</h1>
 
           <div className="row btn-group-wrapper">
             <div className="col-sm-12 col-md-5 col-lg-5 col-xl-5 pay-now">
@@ -146,83 +146,93 @@ let mailORder= []
               </div>
             </div>
           </div>
-        </>
+        </div>
       ) : (
-        ""
+        <div className="checkout-space"></div>
       )}
       <div className={`checkout-space ${display}`}></div>
       {now === true
         ? clientSecret && (
             <Elements stripe={promise}>
-              <CheckoutForm email={email} name={name} details={details} />
+              <CheckoutForm
+                email={email}
+                name={name}
+                details={details}
+                total={total}
+              />
             </Elements>
           )
         : ""}
       {local === true ? (
-        <div className="container">
-          <form className="p-5" onSubmit={handleSubmit}>
-            <label htmlFor="name">Introduzca su nombre:</label>
+        <div className="container slide-top">
+          <form className="" onSubmit={handleSubmit}>
+            <h5 className="mt-5">Introduzca su nombre:</h5>
             <input
               id="name"
-              className="form-control w-25 mx-auto"
+              className="form-control w-50 mx-auto my-4 text-center"
               placeholder="Su nombre"
               onChange={(e) => {
                 e.preventDefault();
                 setName(e.target.value);
+                setHideForm("show");
               }}
               required
             />
-
-            <div className="container-fluid">
-              <div className=" m-5 w-100 mx-auto checkout-local-resumen">
-                {name && email ? (
-                  <>
-                    <h1>~Resumen~</h1>
-                    Hola {name}! <br />
-                    Gracias por haber elegido La Herradura Vinoteca. Encontrará
-                    los datos para recoger a continuación:{" "}
-                    <div className="checkout-destacar row d-flex">
-                      <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6">
-                        <div className="order-details-wrapper">
-                          {" "}
-                          ~ Detalles ~
-                          <ul>
-                            {clean().map((item) => (
-                              <>
-                                <li className="order-details" key={item.id}>
-                                  {item.plato} x {amountOfItems(item.id)}
-                                  {/* {console.log(mailOrder)} */}
-                                </li>
-                                <span style={{ display: "none" }}>
-                                  {mailORder.push(
-                                    item.plato + " x " + amountOfItems(item.id)
-                                  )}
-                                </span>
-                              </>
-                            ))}
-                          </ul>
+            {name ? (
+              <div className={`container-fluid ${hideForm} slide-top`}>
+                <div className=" m-5 w-100 mx-auto checkout-local-resumen">
+                  {name && email ? (
+                    <>
+                      <h1>~Resumen~</h1>
+                      Hola {name}! <br />
+                      Gracias por haber elegido La Herradura Vinoteca.
+                      Encontrará los datos para recoger a continuación:{" "}
+                      <div className="checkout-destacar row d-flex">
+                        <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 ">
+                          <div className="order-details-wrapper">
+                            {" "}
+                            ~ Detalles ~
+                            <ul className="p-0">
+                              {clean().map((item, i) => (
+                                <>
+                                  <li className="order-details " key={item.id}>
+                                    {item.plato} x {amountOfItems(item.id)}
+                                  </li>
+                                  <span key={i} style={{ display: "none" }}>
+                                    {mailORder.push(
+                                      item.plato +
+                                        " x " +
+                                        amountOfItems(item.id)
+                                    )}
+                                  </span>
+                                </>
+                              ))}
+                            </ul>
+                          </div>
+                        </div>
+                        <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 p-2">
+                          Número de Pedido: {referencia}
+                          <br />A nombre de: {name}
+                          <br />
+                          Email: {email}
+                          <br />
+                          Total: {total} €
                         </div>
                       </div>
-                      <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 p-2">
-                        Número de Pedido: {referencia}
-                        <br />A nombre de: {name}
-                        <br />
-                        Email: {email}
-                        <br />
-                        Total: {order.total} €
-                      </div>
-                    </div>
-                    <input
-                      className="btn btn-success"
-                      type="submit"
-                      value="enviar"
-                    />
-                  </>
-                ) : (
-                  ""
-                )}
+                      <input
+                        className="btn btn-success mt-3"
+                        type="submit"
+                        value="Confirmar pedido"
+                      />
+                    </>
+                  ) : (
+                    <div className="checkout-space"></div>
+                  )}
+                </div>
               </div>
-            </div>
+            ) : (
+              <div className="checkout-space"></div>
+            )}
           </form>
         </div>
       ) : (

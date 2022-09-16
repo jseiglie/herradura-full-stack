@@ -28,7 +28,7 @@ exports.sendEmail = async (req, res) => {
     to: req.body.mail,
     bcc: "herraduravinoteca@gmail.com",
     subject: `Pedido ${req.body.referencia} realizado satisfactoriamente en La Herradura Vinoteca`,
-    html: `<h3>Pedido para recoger en La Herradura Vinoteca</h3><p>Hola ${req.body.name? req.body.name : req.body.mail}! Se ha recibido correctamente el pedido realizado, los datos del mismo a continuación:<p/><ul>${arr}</ul><br></br>Agradecemos su preferencia! <br></br> La Herradura Vinoteca`,
+    html: `<h1>***Resumen***</h1><p>Hola ${req.body.name? req.body.name : req.body.mail}! Se ha recibido correctamente el pedido realizado, los datos del mismo a continuación:<p/><h3>*Detalles*</h3><ul>${arr}</ul><br></br><h4>Número de referencia de su pedido: ${req.body.referencia}</h4><h4>A nombre de: ${req.body.name? req.body.name : req.body.mail}</h4><h4>Email: ${req.body.mail}</h4><h4>Total: ${req.body.total}€</h4>Agradecemos su preferencia! <br></br> La Herradura Vinoteca`,
   };
 
   const transporter = nodemailer.createTransport({

@@ -431,17 +431,16 @@ router.get("/auth", validateToken, (req, res) => {
 
 const calculateOrderAmount = (items) => {
   let temp =[];
- let backprice = ""
+ let backprice
 
  //console.log("before foreach", items)
  items.items.forEach(element => {
   temp.push(element.precio)
  // console.log("temp ", temp)
-  backprice = Math.ceil((temp.reduce((a,b)=>a+b)).toFixed(2))
 });
-
-
-  return backprice*100;
+backprice = (temp.reduce((a,b)=>a+b))*100
+backprice = (parseInt(backprice))
+  return backprice;
 } 
       
 router.post("/create-payment-intent", async (req, res) => {

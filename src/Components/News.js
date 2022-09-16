@@ -9,7 +9,7 @@ const News = () => {
     setData(resp.data);
   };
   useEffect(() => {
-    getData();
+    getData();// eslint-disable-next-line
   }, []);
   return (
     <section id="news">

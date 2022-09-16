@@ -28,7 +28,6 @@ const Dashboard = () => {
   const getMenu = async () => {
     const res = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
     setMenu(res.data);
-    // console.log(res.data)
   };
 
   const getCatego = async () => {
