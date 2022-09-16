@@ -1,9 +1,6 @@
-import React from "react";
-
 const FooterH = () => {
   return (
-    <div className="container-fluid bg-dark footer-holder" style={{ zIndex: 0 }}>
-      
+    <div className="container-fluid bg-dark footer-holder" style={{ zIndex: 0 }}>    
       <img
         src="./img/herradura_logo.webp"
         alt="La Herradura Vinoteca Logo"
@@ -16,5 +13,4 @@ const FooterH = () => {
     </div>
   );
 };
-
 export default FooterH;

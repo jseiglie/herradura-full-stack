@@ -1,29 +1,16 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
-import {useNavigate} from "react-router-dom"
-
+import React, { useState } from "react";
 const Register = () => {
-  
   const [password, setPassword] = useState();
   const [email, setEmail] = useState()
-
-const navigate = useNavigate("")
-
   const handleSubmit =  async () => {
     const payload = {email: email, password: password}
-
-    const res = await axios.post(`${process.env.REACT_APP_APIURL}/register`, payload).then((res)=>{
+    await axios.post(`${process.env.REACT_APP_APIURL}/register`, payload).then((res)=>{
       if (res.data.error){
         alert("usuario y contraseña erroneos")
       }else {
         localStorage.setItem("token", res.data)
-        console.log(res)
-    }
-    }) 
-
-    console.log(payload)
-  };
-
+    }})};
   return (
     <div className="container w-50">
       <div className="card">
@@ -49,5 +36,4 @@ const navigate = useNavigate("")
     </div>
   );
 };
-
 export default Register;

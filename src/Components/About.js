@@ -1,5 +1,3 @@
-import React from "react";
-
 const About = () => {
   return (
     <section id="about" className="p-5">
@@ -31,6 +29,7 @@ const About = () => {
           </div>
           <div className="col-lg-8 col-md-12 col-sm1-2">
             <iframe
+            title="Google Maps"
               className="about_Map"
               loading="lazy"
               allowFullScreen

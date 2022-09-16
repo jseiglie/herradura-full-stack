@@ -4,108 +4,76 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 
 const Cart = (props) => {
-  
-  let cartItems =  [props.items]
-  
+  let cartItems = [props.items];
+
   const [items, setItems] = useState([cartItems[0]]);
   const [subtotal, setSubtotal] = useState([]);
-  const [cleanCart, setCleanCart] = useState([])
   const navigate = useNavigate();
 
-const date = new Date().toISOString().slice(2,19).replace(/-/g,"_")
-const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*1000)
+  const date = new Date().toISOString().slice(2, 19).replace(/-/g, "_");
+  const ran =
+    date +
+    "_" +
+    Math.floor(Math.random() * 1000) * Math.floor(Math.random() * 1000);
 
   useEffect(() => {
-    debt(); 
+    debt();
     amountOfItems();
-    //console.log("cartItems", cartItems)
-    console.log(items)
+  
+    console.log(items);
   }, [cartItems[0]]);
 
   useEffect(() => {
-    console.log(items)
+    console.log(items);
   }, [items]);
 
-  
-  useEffect(()=>{
-    // if (sessionStorage.getItem("payload")){
-    //   tmp = JSON.parse(sessionStorage.getItem("payload"))
-    //   setItems(tmp.data)
-    //   }
-  },[])
-
-  const clean = ()=>{
-    let data = cartItems[0]
-    let jsonObj = data.map(JSON.stringify)
+  const clean = () => {
+    let data = cartItems[0];
+    let jsonObj = data.map(JSON.stringify);
     let uniqueSet = new Set(jsonObj);
-    let result= Array.from(uniqueSet).map(JSON.parse)
-   return(result)
-    
-  }
-  
+    let result = Array.from(uniqueSet).map(JSON.parse);
+    return result;
+  };
 
   const debt = () => {
-    
     let arr = [];
     let temp;
     let result;
     if (cartItems[0].length > 0) {
       cartItems[0].forEach((element) => {
-        // console.log(element);
         for (let key in element) {
-          //console.log(key + "----" + JSON.stringify( element))
           temp = JSON.stringify(element);
-          console.log()
+          console.log();
           result = JSON.parse(temp);
-          
         }
         arr.push(result.precio);
-        //console.log("array ----- " + arr);
-        setSubtotal(arr.reduce((a, b) => a + b).toFixed(2));
-        console.log(subtotal);
-        //console.log(result.precio)
-        //setSubtotal(subtotal.push(result.precio))
+        setSubtotal(arr.reduce((a, b) => a + b).toFixed(2));  
       });
-    } 
-    console.log(subtotal)
+    }
   };
 
   const handleProcesarPago = async (e) => {
-    
-    const payload = {data: cartItems[0], number: ran, total: subtotal}
-    console.log(payload)
-    sessionStorage.setItem("payload", JSON.stringify( payload))
+    const payload = { data: cartItems[0], number: ran, total: subtotal };
+    console.log(payload);
+    sessionStorage.setItem("payload", JSON.stringify(payload));
     try {
       const resp = await axios.post(
         `${process.env.REACT_APP_APIURL}/neworder`,
-        payload)
-        console.log(resp)
-      sessionStorage.setItem("order", JSON.stringify(resp))
+        payload
+      );
+      console.log(resp);
+      sessionStorage.setItem("order", JSON.stringify(resp));
       navigate("/checkout");
-      
     } catch (error) {
-      alert("Ha ocurrido un error en el proceso")
-      console.log({error: error})
+      alert("Ha ocurrido un error en el proceso");
+      console.log({ error: error });
     }
-
   };
 
   const handleEmpty = () => {
     cartItems = [];
-    setItems([])
+    setItems([]);
     props.sendData(cartItems);
-  };
-
-  const deleteCartItem = (e) => {
-    let del;
-    if (cartItems[0].length > 0) {
-      del = cartItems[0].splice(e.target.id, 0);
-      props.deleteCartItem(del);
-    }
-    if ((cartItems[0].length = 0)) {
-      del = [];
-      props.deleteCartItem(del);
-    }
   };
 
   const amountOfItems = (id) =>
@@ -113,25 +81,21 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
 
   const addToCart = (item) => {
     cartItems[0] = [...cartItems[0], item];
-    console.log(cartItems[0])
+    console.log(cartItems[0]);
     props.sendAdd(cartItems);
   };
 
   const removeFromCart = (e) => {
     const indexOfItemToRemove = cartItems[0].findIndex(
       (cartItem) => cartItem.id === e.target.id
-      );
-      console.log(cartItems[0]);
-      props.removeFromCart([
-        ...cartItems[0].slice(0, indexOfItemToRemove),
-        ...cartItems[0].slice(indexOfItemToRemove + 1),
-      ]);
-      setItems(cartItems[0])
+    );
+    console.log(cartItems[0]);
+    props.removeFromCart([
+      ...cartItems[0].slice(0, indexOfItemToRemove),
+      ...cartItems[0].slice(indexOfItemToRemove + 1),
+    ]);
+    setItems(cartItems[0]);
   };
-
-
-
-  //console.log(final)
 
   return (
     <div className="modal-content">
@@ -168,7 +132,6 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
                   <div className="col-2">
                     {(amountOfItems(item.id) * item.precio).toFixed(2)}
                   </div>
-                 
                 </div>
               </div>
             ))
@@ -176,9 +139,7 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
         {cartItems[0].length > 0 ? (
           <div className="row">
             <div className="col-10"></div>
-            
             <div className="col-2">Total: {subtotal}</div>
-            
           </div>
         ) : (
           ""
@@ -213,11 +174,9 @@ const ran = date+"_"+Math.floor(Math.random()*1000)*Math.floor(Math.random()*100
     </div>
   );
 };
-
 Cart.propTypes = {
   items: PropTypes.array,
   sendData: PropTypes.func,
   deleteCartItem: PropTypes.func,
 };
-
 export default Cart;

@@ -19,11 +19,11 @@ export default function CheckoutForm(props) {
   const [clientSecret, setClientSecret] = useState("");
   const [message, setMessage] = useState();
   const navigate = useNavigate();
-  const [isLoading, setIsLoading] = useState();
-  const items = props.items;
-  const [total, setTotal] = useState([]);
   const [stripeItems, setStripeItems] = useState();
-  const [client_secret, setClient_secret] = useState();
+  const referencia = props.referencia
+  const email = props.email
+  const mailOrder = props.mailOrder
+  const name = props.name
 
   useEffect(() => {
     let temp = JSON.parse(sessionStorage.getItem("order"));
@@ -74,6 +74,24 @@ export default function CheckoutForm(props) {
       setError(null);
       setProcessing(false);
       setSucceeded(true);
+
+      const mailOpts = {
+        order: mailOrder,
+        mail: email,
+        name: name,
+        referencia: referencia,
+      };
+      const values = {
+        name: name,
+        mail: email,
+        completed: true,
+      };
+      try {
+      await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
+      await axios.post(`${process.env.REACT_APP_APIURL}/sendherradura`, mailOpts);
+      
+      await axios.post(`${process.env.REACT_APP_APIURL}/complete/${referencia}`, values);
+    } catch (error) {}
     }
   };
 
@@ -87,7 +105,6 @@ export default function CheckoutForm(props) {
       <form id="payment-form" onSubmit={handleSubmit}>
         <CardElement
           id="card-element"
-          // options={cardStyle}
           onChange={handleChange}
         />
         <button disabled={processing || disabled || succeeded} id="submit">
@@ -121,9 +138,9 @@ export default function CheckoutForm(props) {
           <div className="bg-success p-3 my-5">
             <b>
               Su pago se ha realizado satisfactoriamente, gracias por su
-            preferencia. 
-            <Link to={"/"}>Volver a Home</Link>
-              </b>
+              preferencia.
+              <Link to={"/"}>Volver a Home</Link>
+            </b>
           </div>
         </div>
       </form>

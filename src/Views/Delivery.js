@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
-import { Link } from "react-router-dom";
 import Cart from "../Components/Cart";
 
 function addItem(uid, plato, precio) {
@@ -18,12 +17,10 @@ const Delivery = () => {
   const [ammount, setAmmount] = useState();
 
   const loader = async () => {
-  
-      const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
+    const menu = await axios.get(`${process.env.REACT_APP_APIURL}/menu`);
     //  console.log(menu)
-      setData(menu.data);
-      sessionStorage.setItem("menu", JSON.stringify(menu.data));
-    
+    setData(menu.data);
+    sessionStorage.setItem("menu", JSON.stringify(menu.data));
 
     const cat = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(cat.data);
@@ -137,7 +134,6 @@ const Delivery = () => {
               id="sidebarCollapse"
               data-bs-toggle="offcanvas"
               data-bs-target="#offcanvas"
-              role="button"
               aria-label="Toggle menu"
               className="no-deco"
             >

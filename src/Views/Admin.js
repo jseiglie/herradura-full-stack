@@ -1,19 +1,17 @@
 import axios from "axios";
-import React, { useEffect, useState } from "react";
+import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import Register from "../Components/Register";
 const Admin = () => {
   const [email, setEmail] = useState();
   const [password, setPassword] = useState();
   //authSTate
-
   const navigate = useNavigate("");
-
   const handleSubmit = async () => {
     if (!email || !password)
       alert("Asegúrese de haber introducido correo electrónico y contraseña");
     const payload = { email: email, password: password };
-    const resp = await axios
+    await axios
       .post(`${process.env.REACT_APP_APIURL}/admin`, payload)
       .then((res) => {
         if (res.data.error) {
@@ -25,7 +23,6 @@ const Admin = () => {
         console.log(res);
       });
   };
-
   return (
     <div className="container w-50">
       <div className="card">
@@ -56,5 +53,4 @@ const Admin = () => {
     </div>
   );
 };
-
 export default Admin;

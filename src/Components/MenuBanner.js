@@ -1,6 +1,4 @@
-import React from "react";
 import { Link } from "react-router-dom";
-
 const MenuBanner = () => {
   return (
     <section id="menu-banner" className="p-5">
@@ -11,7 +9,7 @@ const MenuBanner = () => {
               <div className="menu-carta w-100">
                 <span className="menu-text">
                   <Link className="no-deco" to={"/menu"}>
-                    A la Carta
+                    La Carta
                   </Link>
                 </span>
               </div>
@@ -33,7 +31,7 @@ const MenuBanner = () => {
               <div className="menu-takeaway w-100">
                 <span className="menu-text">
                   <Link className="no-deco" to={"/delivery"}>
-                    A la Casa
+                   Para Casa
                   </Link>
                 </span>
               </div>
@@ -44,5 +42,4 @@ const MenuBanner = () => {
     </section>
   );
 };
-
 export default MenuBanner;

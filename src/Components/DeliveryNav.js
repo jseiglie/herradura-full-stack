@@ -1,27 +1,18 @@
 import React, { useEffect, useState } from "react";
-import PropTypes from "prop-types";
 import axios from "axios";
-
 const DeliveryNav = (props) => {
-  
-  const [categories, setCategories] = useState([])
+  const [categories, setCategories] = useState([]);
   const [catego, setCatego] = useState();
-
   const selected = (e) => {
     setCatego(e.target.id);
   };
-
-
-
   const loader = async () => {
     const resp = await axios.get(`${process.env.REACT_APP_APIURL}/categories`);
     setCategories(resp.data);
   };
-
-useEffect(()=>{
-  loader()
-},[])
-
+  useEffect(() => {
+    loader();
+  }, []);
   return (
     <>
       <nav
@@ -42,17 +33,18 @@ useEffect(()=>{
         </div>
         <div className="offcanvas-body px-0">
           <ul className="navbar-nav">
-            {categories && categories.map((item) => (
-              <li
-                key={item.uid}
-                id={item.uid}
-                onClick={(e) => selected(e)}
-                data-bs-dismiss="offcanvas"
-                className="nav-item delivery-nav-item"
-              >
-                {item.catego}
-              </li>
-            ))}
+            {categories &&
+              categories.map((item) => (
+                <li
+                  key={item.uid}
+                  id={item.uid}
+                  onClick={(e) => selected(e)}
+                  data-bs-dismiss="offcanvas"
+                  className="nav-item delivery-nav-item"
+                >
+                  {item.catego}
+                </li>
+              ))}
           </ul>
         </div>
       </nav>
@@ -69,5 +61,4 @@ useEffect(()=>{
     </>
   );
 };
-
 export default DeliveryNav;

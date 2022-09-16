@@ -377,7 +377,8 @@ router.put("/complete/:referencia", async (req, res)=>{
   }
 })
 
-router.post("/sendmail", Mail.sendEmail)
+router.post("/sendmail", Mail.sendEmail) 
+router.post("/sendherradura", Mail.sendherradura)
 
 //admin
 router.post("/admin", async (req, res) => {

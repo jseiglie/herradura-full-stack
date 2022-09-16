@@ -1,7 +1,5 @@
-import React from "react";
 import { Link } from "react-router-dom";
 import { HashLink } from "react-router-hash-link";
-
 const NavBar = () => {
   return (
     <nav className="navbar navbar-expand-md navbar-dark bg-dark navbar-holder sticky-top">
@@ -69,5 +67,4 @@ const NavBar = () => {
     </nav>
   );
 };
-
 export default NavBar;

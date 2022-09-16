@@ -18,12 +18,12 @@ const Home = () => {
         </div>
       </section>
 
-    <MenuBanner />
+      <MenuBanner />
 
-   <News/>
+      <News />
 
-<About/>
-    
+      <About />
+
       <CookiesH />
     </>
   );
