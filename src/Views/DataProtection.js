@@ -1,8 +1,8 @@
-import PrivacyText from "../Components/PrivacyText"
+import DataProteccionText from "../Components/DataProtectionText"
 
-const Privacy = () => {
+const DataProteccion = () => {
   return (
-    <PrivacyText 
+   <DataProteccionText 
     companyName={"La Herradura Vinoteca"}  
     website={"https://www.laherraduravinoteca.es"}
     email={"javierseiglie@gmail.com"}
@@ -10,9 +10,9 @@ const Privacy = () => {
     owner={"Francisco"}
     ownerAddress={""}
     ownerDNI={""}
-    privacyURL={"https://www.laherraduravinoteca.es/politicaprivacidad"}
+    DataProteccionURL={"https://www.laherraduravinoteca.es/politicaprivacidad"}
 />
   )
 }
 
-export default Privacy
+export default DataProteccion

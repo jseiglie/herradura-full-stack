@@ -1,7 +1,7 @@
 import React from "react";
 import PropTypes from "prop-types";
 
-const PrivacyText = (props) => {
+const DataProtectionText = (props) => {
   return (
     <article>
       <h1>
@@ -171,7 +171,7 @@ const PrivacyText = (props) => {
   );
 };
 
-PrivacyText.propTypes = {
+DataProtectionText.propTypes = {
   companyName: PropTypes.string,
   website: PropTypes.string,
   email: PropTypes.string,
@@ -182,4 +182,4 @@ PrivacyText.propTypes = {
   privacyUrl: PropTypes.string,
 };
 
-export default PrivacyText;
+export default DataProtectionText;

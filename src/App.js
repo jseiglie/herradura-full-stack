@@ -11,7 +11,10 @@ import Delivery from "./Views/Delivery";
 import Edit from "./Views/Edit";
 import Home from "./Views/Home";
 import Menu from "./Views/Menu";
-import Privacy from "./Views/Privacy";
+import DataProtection from "./Views/DataProtection";
+import CondicionesUso from "./Views/CondicionesUso";
+import CookiesPolicy from "./Views/CookiesPolicy";
+import LegalNotice from "./Views/LegalNotice";
 
 function App() {
   return (
@@ -42,8 +45,11 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/add" element={<Edit />} />
-          <Route path="/politicaprivacidad" element={<Privacy />} />
-          
+          <Route path="/protecciondatos" element={<Privacy />} />
+          <Route path="/politica_de_cookies" element={<CookiesPolicy />} />
+          <Route path="/aviso_legal" element={<LegalNotice />} />
+          <Route path="/politica_de_privacidad" element={<DataProtection />} />
+          <Route path="/condiciones_de_uso" element={<CondicionesUso />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>
