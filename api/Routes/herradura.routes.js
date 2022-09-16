@@ -437,9 +437,9 @@ const calculateOrderAmount = (items) => {
  items.items.forEach(element => {
   temp.push(element.precio)
  // console.log("temp ", temp)
-  backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
+  backprice = Math.ceil((temp.reduce((a,b)=>a+b)).toFixed(2))
 });
-console.log(backprice)
+
 
   return backprice*100;
 } 

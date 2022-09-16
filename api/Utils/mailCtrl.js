@@ -16,10 +16,11 @@ exports.sendEmail = async (req, res) => {
 
   //
   const data = req.body.order;
+  console.log("email client data", data)
   let el;
   let arr = "";
   for (el in data) {
-    console.log(el);
+    //console.log(el);
     arr += "<li>" + data[el] + "</li>";
   }
   const toClient = {

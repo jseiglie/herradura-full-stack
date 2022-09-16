@@ -19,10 +19,11 @@ const Checkout = () => {
   const [order, setOrder] = useState([]);
   const [email, setEmail] = useState("");
   const [display, setDisplay] = useState("show");
+  const [referencia, setReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(18, 24))
+let mailORder= []
   const navigate = useNavigate();
-  let mailOrder = [];
+
   let dbReferencia;
-  let referencia;
 
   useEffect(() => {
     if (!sessionStorage.getItem("order")) {
@@ -32,8 +33,8 @@ const Checkout = () => {
     const temp = [JSON.parse(sessionStorage.getItem("order"))];
     const strobj = JSON.parse(temp[0].data.order);
     dbReferencia = temp[0].data.referencia;
-    setOrder(temp[0].data.order);
-    referencia = temp[0].data.referencia.substring(18, 24);
+    setOrder(temp[0].data);
+    console.log("order", temp[0].data.total)
     setDetails(JSON.parse(temp[0].data.order));
     console.log("details", JSON.parse(temp[0].data.order));
     checkdb();
@@ -48,6 +49,7 @@ const Checkout = () => {
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
   }, []);
+
   const handleOnline = (e) => {
     setNow(true);
     setLocal(false);
@@ -67,6 +69,17 @@ const Checkout = () => {
     return result;
   };
 
+  const amountOfItems = (id) => details.filter((item) => item.id === id).length;
+  
+  const orderDetails = () => {
+    let temp = []
+    clean().map((item) => {
+      temp.push(item.plato + " x " + amountOfItems(item.id));
+      console.log(temp)
+    });
+    return temp
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const values = {
@@ -76,23 +89,28 @@ const Checkout = () => {
     };
 
     const mailOpts = {
-      order: mailOrder,
+      order: orderDetails(),
       mail: email,
       name: name,
       referencia: referencia,
     };
     try {
       await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
-      await axios.post(`${process.env.REACT_APP_APIURL}/complete/${referencia}`, values);
+      console.log(mailOpts)
+      await axios.put(
+        `${process.env.REACT_APP_APIURL}/complete/${referencia}`,
+        values
+      );
     } catch (error) {}
   };
 
-  const amountOfItems = (id) => details.filter((item) => item.id === id).length;
+
+
   const checkdb = async () => {
     const resp = await axios.get(
       `${process.env.REACT_APP_APIURL}/purchases/${dbReferencia}`
     );
-    console.log("checkdb ", resp.data);
+    //console.log("checkdb ", resp.data);
   };
 
   return (
@@ -136,7 +154,7 @@ const Checkout = () => {
       {now === true
         ? clientSecret && (
             <Elements stripe={promise}>
-              <CheckoutForm referencia={referencia} email={email} mailOrder={mailOrder} name={name}/>
+              <CheckoutForm email={email} name={name} details={details} />
             </Elements>
           )
         : ""}
@@ -176,7 +194,7 @@ const Checkout = () => {
                                   {/* {console.log(mailOrder)} */}
                                 </li>
                                 <span style={{ display: "none" }}>
-                                  {mailOrder.push(
+                                  {mailORder.push(
                                     item.plato + " x " + amountOfItems(item.id)
                                   )}
                                 </span>

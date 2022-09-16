@@ -20,18 +20,24 @@ export default function CheckoutForm(props) {
   const [message, setMessage] = useState();
   const navigate = useNavigate();
   const [stripeItems, setStripeItems] = useState();
-  const referencia = props.referencia
+  const [dbReferencia, setDbReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia)
+  const [details, setDetails] = useState(props.details)
+  const [referencia, setReferencia] = useState(JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(18, 24))
   const email = props.email
-  const mailOrder = props.mailOrder
-  const name = props.name
 
+  const name = props.name
+  
   useEffect(() => {
+    
     let temp = JSON.parse(sessionStorage.getItem("order"));
     let strobj = JSON.parse(temp.data.order);
+    //setDetails(JSON.parse(temp.data.order));
     console.log(JSON.parse(temp.data.order));
     setStripeItems(JSON.parse(temp.data.order));
     console.log({ items: [{ stripeItems }] });
     // Create PaymentIntent as soon as the page loads
+    //orderDetails()
+    console.log(details)
     window
       .fetch("http://localhost:3001/api/create-payment-intent", {
         method: "POST",
@@ -76,7 +82,7 @@ export default function CheckoutForm(props) {
       setSucceeded(true);
 
       const mailOpts = {
-        order: mailOrder,
+        order: orderDetails(),
         mail: email,
         name: name,
         referencia: referencia,
@@ -89,8 +95,8 @@ export default function CheckoutForm(props) {
       try {
       await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
       await axios.post(`${process.env.REACT_APP_APIURL}/sendherradura`, mailOpts);
-      
-      await axios.post(`${process.env.REACT_APP_APIURL}/complete/${referencia}`, values);
+      console.log(referencia)
+      await axios.put(`${process.env.REACT_APP_APIURL}/complete/${dbReferencia}`, values);
     } catch (error) {}
     }
   };
@@ -98,6 +104,22 @@ export default function CheckoutForm(props) {
   const handleCancel = () => {
     sessionStorage.removeItem("order");
     navigate("/delivery");
+  };
+
+  const clean = () => {
+    const uniqueSet = new Set(details.map(JSON.stringify));
+    const result = Array.from(uniqueSet).map(JSON.parse);
+    return result;
+  };
+  const amountOfItems = (id) => details.filter((item) => item.id === id).length;
+
+  const orderDetails = () => {
+    let temp = []
+    clean().map((item) => {
+      temp.push(item.plato + " x " + amountOfItems(item.id));
+      console.log(temp)
+    });
+    return temp
   };
 
   return (

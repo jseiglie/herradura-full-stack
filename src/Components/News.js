@@ -16,7 +16,8 @@ const News = () => {
       <div className="container-fluid  news-holder mt-5 p-5 ">
         <div className="row">
           {data.map((item) => (
-            <div key={item.uid} className="col-lg-2 col-md-6 col-sm-12 card-news-holder" >           
+            <div key={item.uid} className="col-lg-2 col-md-6 col-sm-12 card-news-holder" >
+            
               <div className="card news-card">
                 <div className="card-body news-body" >
                   <div className="container recuadro" id={item.uid}>
@@ -27,20 +28,19 @@ const News = () => {
                       className="news-logo"
                     />
                     <span className="dienesis-R">~</span>
-                    <img
-                      src=""
-                      alt="Platos nuevos"
-                      className="img-fluid news-img"
-                    /><p  className="mt-4" style={{backgroundColor: "#00000010"}}>
+                   <div  className="mt-4" style={{backgroundColor: "#00000010"}}>
+
                     {item.plato}
-                    </p>                
-                    <p className="line-clamp" >
+                    </div>
+                    
+                    <div className="line-clamp" >
                       {item.descripcion}
-                      </p>
+                      </div>
                     <br />
-                    <p className="footer-wrapper">
+                    <div className="footer-wrapper">
+
                     --{item.precio}€-- <br />
-                    </p>
+                    </div>
                   </div>
                 </div>
               </div>
@@ -51,4 +51,5 @@ const News = () => {
     </section>
   );
 };
+
 export default News;
