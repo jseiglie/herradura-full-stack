@@ -1,8 +1,9 @@
 import React from 'react'
+import TermAndConditionsText from '../Components/TermAndConditionsText'
 
 const CondicionesUso = () => {
   return (
-    <div>CondicionesUso</div>
+    <TermAndConditionsText/>
   )
 }
 

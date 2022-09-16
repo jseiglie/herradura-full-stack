@@ -12,7 +12,7 @@ import Edit from "./Views/Edit";
 import Home from "./Views/Home";
 import Menu from "./Views/Menu";
 import DataProtection from "./Views/DataProtection";
-import CondicionesUso from "./Views/CondicionesUso";
+import TermAndConditions from "./Views/TermAndConditions";
 import CookiesPolicy from "./Views/CookiesPolicy";
 import LegalNotice from "./Views/LegalNotice";
 
@@ -49,7 +49,7 @@ function App() {
           <Route path="/politica_de_cookies" element={<CookiesPolicy />} />
           <Route path="/aviso_legal" element={<LegalNotice />} />
           <Route path="/politica_de_privacidad" element={<DataProtection />} />
-          <Route path="/condiciones_de_uso" element={<CondicionesUso />} />
+          <Route path="/condiciones_de_uso" element={<TermAndConditions />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>

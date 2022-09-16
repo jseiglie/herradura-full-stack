@@ -1,7 +1,7 @@
 import React from 'react'
 import PropTypes from 'prop-types'
 
-const CondicionesUsoText = props => {
+const TermAndConditionsText = props => {
   return (
     <article>
         Términos y Condiciones de Uso
@@ -85,6 +85,6 @@ términos sin previo aviso.
   )
 }
 
-CondicionesUsoText.propTypes = {}
+TermAndConditionsText.propTypes = {}
 
-export default CondicionesUsoText
+export default TermAndConditionsText
