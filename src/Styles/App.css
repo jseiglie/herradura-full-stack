@@ -275,6 +275,26 @@ body::-webkit-scrollbar-thumb {
   padding: 0.3rem 2rem;
 }
 
+/* =============ADMIN===================== */
+.admin-view{
+  height: 80vh;
+  display: flex;
+  align-items: center;
+}
+.admin-container{
+  display: flex;
+  flex-direction: row;
+}
+.admin-form-wrapper{
+  align-self: center;
+  display: flex;
+  margin: auto;
+}
+.admin-logo{
+  max-height: 25vh;
+  margin: auto;
+  padding: 1rem;
+}
 /* =================================================== */
 .delivery-btn-holder {
   margin-top: 4rem;

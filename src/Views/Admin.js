@@ -24,32 +24,56 @@ const Admin = () => {
       });
   };
   return (
-    <div className="container w-50">
-      <div className="card">
-        <label htmlFor="username">Usuario</label>
-        <input
-          id="username"
-          className="from-control"
-          type="text"
-          name="usename"
-          onChange={(e) => setEmail(e.target.value)}
-          required
-        />
-        <label htmlFor="password">Contraseña</label>
-        <input
-          className="from-control"
-          type="password"
-          name="password"
-          onChange={(e) => setPassword(e.target.value)}
-          required
-        />
-        <button type="submit" onClick={handleSubmit}>
-          {" "}
-          Log in
-        </button>
+    <div className="admin-view">
+      <div className="container w-75">
+        <div className="row admin-container">
+        <div className="col-sm-12 col-md-2 col-lg-2 col-xl-2 "></div>
+          
+          <div className="col-sm-12 col-md-4 col-lg-4 col-xl-4 ">
+            <img
+              className="img-fluid admin-logo"
+              src="./img/herradura_logo.webp"
+              alt="Herradura logo"
+            />
+          </div>
+          <div className="col-sm-12 col-md-4 col-lg-4 col-xl-4 admin-form-wrapper">
+            <div className="admin-form">
+              <label className="p-2" htmlFor="username">
+                Usuario
+              </label>
+              <br/>
+              <input
+                id="username"
+                className="from-control"
+                type="text"
+                name="usename"
+                onChange={(e) => setEmail(e.target.value)}
+                required
+              />
+              <br/>
+              <label className="p-2" htmlFor="password">
+                Contraseña
+              </label>
+              <br/>
+              <input
+                className="from-control"
+                type="password"
+                name="password"
+                onChange={(e) => setPassword(e.target.value)}
+                required
+              />
+              <br/>
+              <button className="m-3 btn" type="submit" onClick={handleSubmit}>
+                {" "}
+                Log in
+              </button>
+            </div>
+          </div>
+          <div className="col-sm-12 col-md-2 col-lg-2 col-xl-2 "></div>
+        </div>
+        {/* register
+      <Register /> */}
       </div>
-      register
-      <Register />
     </div>
   );
 };
