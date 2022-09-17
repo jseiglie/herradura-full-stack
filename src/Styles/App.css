@@ -447,16 +447,19 @@ body::-webkit-scrollbar-thumb {
   background-color: #00000054;
   color: #f7f7f7;
   padding: 0.5rem;
+  
 }
 .cat-holder {
   align-items: center;
   justify-content: center;
+
 }
 .cat-col {
   display: flex;
   -webkit-line-clamp: 1;
   overflow: hidden;
   text-align: center;
+  width: max-content!important;
 }
 .cat-item {
   padding: 0.2rem;

@@ -1,7 +1,7 @@
 import axios from "axios";
 import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
-//import Register from "../Components/Register";
+import { useNavigate } from "react-router-dom";// eslint-disable-next-line
+import Register from "../Components/Register";
 
 const Admin = () => {
   const [email, setEmail] = useState();

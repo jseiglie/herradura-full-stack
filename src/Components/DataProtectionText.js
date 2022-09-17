@@ -1,6 +1,3 @@
-import React from "react";
-import PropTypes from "prop-types";
-
 const DataProtectionText = (props) => {
   // props
   // companyName={"La Herradura Vinoteca"}
@@ -15,9 +12,6 @@ const DataProtectionText = (props) => {
 
   const olStyle = {
     textAlign: "left",
-  };
-  const ulStyle = {
-    listStyle: "none",
   };
   const textStyle = {
     textAlign: "justify",
@@ -250,17 +244,6 @@ const DataProtectionText = (props) => {
       </p>
     </article>
   );
-};
-
-DataProtectionText.propTypes = {
-  companyName: PropTypes.string,
-  website: PropTypes.string,
-  email: PropTypes.string,
-  address: PropTypes.string,
-  owner: PropTypes.string,
-  ownerAddress: PropTypes.string,
-  ownerDNI: PropTypes.string,
-  privacyUrl: PropTypes.string,
 };
 
 export default DataProtectionText;

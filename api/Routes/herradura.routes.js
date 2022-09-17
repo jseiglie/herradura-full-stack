@@ -20,7 +20,7 @@ router.get("/menuDisponible", async (req, res) => {
     const resp = await Menu.findAll({ where: { disponible: true } });
     res.json(resp);
   } catch (error) {
-    console.error(`Error al pedir el menu: ${error}`);
+    console.error(`Error al pedir el menu disponible: ${error}`);
   }
 });
 

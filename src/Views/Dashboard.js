@@ -106,12 +106,12 @@ const Dashboard = () => {
     <div className="container-fluid dash-wrap">
       <div className="d-flex title-logout w-50 ">
         <h1>Dashboard</h1>
-        <button className="logout">Salir</button>
+        <button className="btn logout">Salir</button>
       </div>
       <div className="row d-flex cat-add-holder">
         <div className="col-11">
           <div className="row cat-holder">
-            <div className="col-2 cat-col ">
+            <div className="col-sm-4 col-md-3 col-lg-2 col-xl-2  cat-col ">
               <span
                 id="menu"
                 className="cat-item"
@@ -122,7 +122,7 @@ const Dashboard = () => {
             </div>
             {catego &&
               catego.map((item, i) => (
-                <div key={i} className="col-2 cat-col">
+                <div key={i} className="col-sm-4 col-md-3 col-lg-2 col-xl-2 cat-col">
                   <span
                     id={item.uid}
                     className="cat-item"
@@ -236,5 +236,4 @@ const Dashboard = () => {
     </div>
   );
 };
-
 export default Dashboard;

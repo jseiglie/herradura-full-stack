@@ -41,14 +41,29 @@ const Edit = () => {
     loadCat();
   }, []);
 
-  const handleSubmit = (e) => {
-    e.preventDefault();
+  const handleSubmit = async (e) => {
+    e.preventDefault()
+    const values = {
+      plato: plato,
+      descripcion: descripcion,
+      precio: precio,
+      vegano: vegano,
+      disponible: disponible,
+    };
+    id
+      ? (await axios.put(
+          `${process.env.REACT_APP_APIURL}/modMenu/${id}`,
+          values
+        )
+        )
+      : await axios.post(`${process.env.REACT_APP_APIURL}/modMenu`, values);
+    navigate("/dashboard");
   };
 
-  const title = () => {
-    let result = categories.filter((item) => item.uid === catego);
-    return result[0].catego;
-  };
+  // const title = () => {
+  //   let result = categories.filter((item) => item.uid === catego);
+  //   return result[0].catego;
+  // };
 
   return (
     <div>
@@ -96,7 +111,9 @@ const Edit = () => {
                 onChange={(e) => setCatego(e.target.value)}
               >
                 {categories.map((item) => (
-                  <option value={item.uid}>{item.catego}</option>
+                  <option key={item.uid} value={item.uid}>
+                    {item.catego}
+                  </option>
                 ))}
               </select>
             </div>
@@ -131,12 +148,12 @@ const Edit = () => {
             </div>
           </div>
           <input
-            className="form-control mt-3 w-50 mx-auto mt-5 btn btn-success add-edit-btn"
+            className="btn mt-3 px-5 mx-5  mt-5 btn btn-success add-edit-btn"
             type="submit"
             value={"Enviar"}
           />
           <button
-            className="form-control mt-3 w-50 mx-auto mt-5 btn btn-danger add-edit-btn"
+            className="btn mt-3 px-5 mx-5 mt-5 btn btn-danger add-edit-btn"
             onClick={(e) => navigate("/dashboard")}
           >
             Cancelar
