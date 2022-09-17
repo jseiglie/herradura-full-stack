@@ -1,10 +1,11 @@
 import React from "react";
 import CookieConsent from "react-cookie-consent";
+import { Link } from "react-router-dom";
 const CookiesH = () => {
   return (
     <CookieConsent
       location="bottom"
-      buttonText="Acepto"
+      buttonText="Aceptar"
       cookieName="CookieConsent"
       style={{ background: "#2B373B", zIndex: 100 }}
       buttonStyle={{
@@ -15,8 +16,11 @@ const CookiesH = () => {
       }}
       expires={150}
     >
+      <div className="w-50 cookie-text-holder">
+
       Esta página utiliza cookies 🍪 propias y de terceros para ofrecer una
-      mejor experiencia de usuario.
+      mejor experiencia de usuario. Puede visitar nuestra <Link className="no-deco" to="politica_de_cookies">Politica de cookies</Link> para conocer qué son las cookies y cómo las utilizamos.
+      </div>
     </CookieConsent>
   );
 };
