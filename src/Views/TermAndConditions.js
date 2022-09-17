@@ -3,7 +3,11 @@ import TermAndConditionsText from '../Components/TermAndConditionsText'
 
 const CondicionesUso = () => {
   return (
-    <TermAndConditionsText/>
+    <TermAndConditionsText 
+    website="www.laherraduravinoteca.es"
+    owner="Marta Albasanz Herrero"
+    companyName="La Herradura Vinoteca"
+    />
   )
 }
 

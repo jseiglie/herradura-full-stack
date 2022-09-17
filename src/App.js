@@ -45,7 +45,6 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/edit/:id" element={<Edit />} />
           <Route path="/add" element={<Edit />} />
-          <Route path="/protecciondatos" element={<Privacy />} />
           <Route path="/politica_de_cookies" element={<CookiesPolicy />} />
           <Route path="/aviso_legal" element={<LegalNotice />} />
           <Route path="/politica_de_privacidad" element={<DataProtection />} />

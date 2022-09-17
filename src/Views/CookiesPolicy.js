@@ -1,6 +1,13 @@
+import CookiesText from "../Components/CookiesText"
+
 const CookiesPolicy = () => {
   return (
-    <div>CookiesPolicy</div>
+    <CookiesText
+    website="www.laherraducavinoteca.es"
+    privacyPolicy="www.laherraducavinoteca.es/politica_de_privacidad"
+    email="javierseiglie@gmail.com"
+
+    />
   )
 }
 
