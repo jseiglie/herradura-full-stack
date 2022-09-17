@@ -177,6 +177,9 @@ body::-webkit-scrollbar-thumb {
   margin-bottom: 0;
   padding: 1rem;
 }
+.RGDP{
+  
+}
 .about_Text {
   margin-top: 2rem;
   margin-bottom: 3rem;
@@ -507,8 +510,6 @@ body::-webkit-scrollbar-thumb {
 .btn-group-checkout {
   justify-content: center;
   display: flex;
-}
-.checkout-wrapper {
 }
 .btn-group-wrapper {
   display: flex;

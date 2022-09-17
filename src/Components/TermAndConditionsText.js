@@ -8,7 +8,7 @@ const TermAndConditionsText = (props) => {
   // companyName="La Herradura Vinoteca"
   return (
     <article className="container mb-5">
-      <h1 className="my-5">Términos y Condiciones de Uso</h1>
+      <h1 className="my-5">Términos y Condiciones</h1>
       <div className="my-5">
         Este contrato describe los términos y condiciones generales aplicables
         al uso de los contenidos, productos y servicios ofrecidos a través del

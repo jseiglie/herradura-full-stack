@@ -48,11 +48,11 @@ function App() {
           <Route path="/politica_de_cookies" element={<CookiesPolicy />} />
           <Route path="/aviso_legal" element={<LegalNotice />} />
           <Route path="/politica_de_privacidad" element={<DataProtection />} />
-          <Route path="/condiciones_de_uso" element={<TermAndConditions />} />
+          <Route path="/terminos_y_condiciones" element={<TermAndConditions />} />
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
-      </BrowserRouter>
       <FooterH />
+      </BrowserRouter>
     </div>
   );
 }
