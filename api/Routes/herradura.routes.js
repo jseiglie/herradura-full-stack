@@ -5,6 +5,7 @@ const Menu = require("../Models/Menu");
 const User = require("../Models/User");
 const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
+const SuplementosPizza = require ("../Models/SuplementosPizza")
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/authmiddleware");
@@ -32,6 +33,41 @@ router.get("/menu", async (req, res) => {
     console.error(`Error al pedir el menu: ${error}`);
   }
 });
+
+//getSuplementos Pizza
+router.get("/suppizza", async (req, res)=>{
+  const resp = await SuplementosPizza.findAll({where: {vegano: 0}})
+  res.json(resp)
+})
+
+//getSuplementos Pizza vegana
+router.get("subpizzavegana", async (req, res)=>{
+  const resp = await SuplementosPizza.findAll({where: {vegano: 1}})
+  res.json(resp)
+})
+
+//getSuplementos Hamburguesa vegana
+router.get("hamvegana", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "4f9e8c1f-2600-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+
+//getSuplementos Hamburguesa
+router.get("ham", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "4f9e813d-2600-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+
+//getSuplementos Perritos
+router.get("perrito", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "ab4d7b65-25fd-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+//getSuplementos Perritos veganos
+router.get("perritovegano", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "d1ee7692-25fe-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
 
 //Destacados limited
 router.get("/destacados", async (req, res) => {
@@ -433,16 +469,19 @@ const calculateOrderAmount = (items) => {
   let temp =[];
  let backprice
 
- //console.log("before foreach", items)
+ console.log("before foreach", items)
+
  items.items.forEach(element => {
+console.log(element)
   temp.push(element.precio)
- // console.log("temp ", temp)
-});
+  console.log("temp ", temp)
+});  
 backprice = (temp.reduce((a,b)=>a+b))*100
 backprice = (parseInt(backprice))
+console.log(backprice)
   return backprice;
-} 
-      
+}  
+       
 router.post("/create-payment-intent", async (req, res) => {
   const items  = req.body;
   // Create a PaymentIntent with the order amount and currency

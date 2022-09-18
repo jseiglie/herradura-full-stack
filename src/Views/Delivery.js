@@ -2,10 +2,11 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import Cart from "../Components/Cart";
 
-function addItem(uid, plato, precio) {
+function addItem(uid, plato, precio, id_catego2) {
   this.id = uid;
   this.plato = plato;
   this.precio = precio;
+  this.id_catego2 = id_catego2;
 }
 
 const Delivery = () => {
@@ -48,7 +49,7 @@ const Delivery = () => {
   }, [items]);
 
   const handleItems = (item) => {
-    setItems([...items, new addItem(item.uid, item.plato, item.precio)]);
+    setItems([...items, new addItem(item.uid, item.plato, item.precio, item.id_catego2)]);
   };
 
   const title = () => {

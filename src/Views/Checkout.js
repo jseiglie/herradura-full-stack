@@ -4,6 +4,7 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Components/CheckoutForm";
 import { useNavigate } from "react-router-dom";
+import SupPizza from "../Components/Suplementos/SupPizza";
 
 // This is your test publishable API key.
 const promise = loadStripe(
@@ -16,9 +17,17 @@ const Checkout = () => {
   const [now, setNow] = useState(false);
   const [local, setLocal] = useState(false);
   const [name, setName] = useState("");
-  const [total, setTotal] = useState();
+  const [total, setTotal] = useState(
+    JSON.parse(sessionStorage.getItem("order")).data.total
+  );
   const [email, setEmail] = useState("");
   const [display, setDisplay] = useState("show");
+  const [strobj, setStrobj] = useState(
+    JSON.parse(JSON.parse(sessionStorage.getItem("order")).data.order)
+  );
+  const [dbReferencia] = useState(
+    JSON.parse(sessionStorage.getItem("order")).data.referencia
+  );
   const [referencia] = useState(
     JSON.parse(sessionStorage.getItem("order")).data.referencia.substring(
       18,
@@ -30,17 +39,13 @@ const Checkout = () => {
   let mailORder = [];
   const navigate = useNavigate();
 
-  let dbReferencia;
-
   useEffect(() => {
     if (!sessionStorage.getItem("order")) {
       alert("Debe de realizar una pedido para visualizar esta página");
       navigate("/pickup");
     }
     const temp = [JSON.parse(sessionStorage.getItem("order"))];
-    const strobj = JSON.parse(temp[0].data.order);// eslint-disable-next-line
-    dbReferencia = temp[0].data.referencia;// eslint-disable-next-line
-    setTotal(temp[0].data.total);// eslint-disable-next-line
+    console.log("str", strobj)
     setDetails(JSON.parse(temp[0].data.order));
     checkdb();
 
@@ -53,6 +58,7 @@ const Checkout = () => {
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
+    console.log(temp[0].data);
   }, []);
 
   const handleOnline = (e) => {
@@ -76,7 +82,7 @@ const Checkout = () => {
   const amountOfItems = (id) => details.filter((item) => item.id === id).length;
 
   const orderDetails = () => {
-    let temp = [];// eslint-disable-next-line
+    let temp = []; // eslint-disable-next-line
     clean().map((item) => {
       temp.push(item.plato + " x " + amountOfItems(item.id));
     });
@@ -115,6 +121,29 @@ const Checkout = () => {
 
   return (
     <div className="container checkout-wrapper slide-top">
+      <section className="my-5">
+        <h1>Revise y modifique su pedido:</h1>~ Detalles ~
+        <ul className="p-0">
+          {clean().map((item, i) => (
+            <>
+              <li className="order-details " key={item.id}>
+                {item.plato} x {amountOfItems(item.id)}
+              </li>
+              {item.id_catego2 === "1ba3995e-2476-11ed-a49a-50ebf6c32832" ? (
+                <SupPizza />
+              ) : (
+                ""
+              )}
+              <span key={i} style={{ display: "none" }}>
+                {mailORder.push(item.plato + " x " + amountOfItems(item.id))}
+
+                {console.log(item)}
+              </span>
+            </>
+          ))}
+        </ul>
+      </section>
+
       <label className="mt-5 mb-3" htmlFor="email">
         <h5>Introduzca su correo electrónico</h5>
       </label>

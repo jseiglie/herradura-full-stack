@@ -44,6 +44,7 @@ const Cart = (props) => {
 
   const handleProcesarPago = async (e) => {
     const payload = { data: cartItems[0], number: ran, total: subtotal };
+    console.log(payload)
     sessionStorage.setItem("payload", JSON.stringify(payload));
     try {
       const resp = await axios.post(
@@ -68,6 +69,7 @@ const Cart = (props) => {
 
   const addToCart = (item) => {
     cartItems[0] = [...cartItems[0], item];
+    console.log("addtocart", item)
     props.sendAdd(cartItems);
   };
 
