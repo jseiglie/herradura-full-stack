@@ -3,32 +3,97 @@ const router = express.Router();
 const db = require("../Config/config");
 const Menu = require("../Models/Menu");
 const User = require("../Models/User");
-const Purchase = require("../Models/Purchases");
 const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
+const SuplementosPizza = require ("../Models/SuplementosPizza")
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
-const stripe = require("stripe")('sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp');
+const { validateToken } = require("../middlewares/authmiddleware");
+const Mail = require("../Utils/mailCtrl")
+const stripe = require("stripe")(
+  "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
+);
+const { Op } = require("sequelize");
 
-
-//Menu
-router.get("/menu", async (req, res) => {
+//Menu disponible
+router.get("/menuDisponible", async (req, res) => {
   try {
     const resp = await Menu.findAll({ where: { disponible: true } });
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
-    console.error(`Error al pedir el menu: ${error}`);
-    res.sendStatus(400);
+    console.error(`Error al pedir el menu disponible: ${error}`);
   }
 });
 
+router.get("/menu", async (req, res) => {
+  try {
+    const resp = await Menu.findAll();
+    res.json(resp);
+  } catch (error) {
+    console.error(`Error al pedir el menu: ${error}`);
+  }
+});
+
+//getSuplementos Pizza
+router.get("/suppizza", async (req, res)=>{
+  const resp = await SuplementosPizza.findAll({where: {vegano: 0}})
+  res.json(resp)
+})
+
+//getSuplementos Pizza vegana
+router.get("subpizzavegana", async (req, res)=>{
+  const resp = await SuplementosPizza.findAll({where: {vegano: 1}})
+  res.json(resp)
+})
+
+//getSuplementos Hamburguesa vegana
+router.get("hamvegana", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "4f9e8c1f-2600-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+
+//getSuplementos Hamburguesa
+router.get("ham", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "4f9e813d-2600-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+
+//getSuplementos Perritos
+router.get("perrito", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "ab4d7b65-25fd-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+//getSuplementos Perritos veganos
+router.get("perritovegano", async (req, res)=>{
+  const resp = await Menu.findAll({where: {id_catego2: "d1ee7692-25fe-11ed-a49a-50ebf6c32832"}})
+  res.json(resp)
+})
+
+//Destacados limited
+router.get("/destacados", async (req, res) => {
+  try {
+    const resp = await Menu.findAll({
+      where: { destacado: true, precio: { [Op.gt]: 6 } },
+      limit: 4,
+    });
+    res.send(resp);
+  } catch (error) {
+    console.log(error);
+  }
+});
+router.get("/destacadosall", async (req, res) => {
+  try {
+    const resp = await Menu.findAll({ where: { destacado: true } });
+    res.send(resp);
+  } catch (error) {
+    console.log(error);
+  }
+});
 //Menu vegano
 router.get("/vegano", async (req, res) => {
   try {
     const resp = await Menu.findAll({ where: { vegano: true } });
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir el menu vegano: ${error}`);
     res.sendStatus(400);
@@ -41,10 +106,21 @@ router.post("addToMenu", async (req, res) => {
     const payload = req.body;
     await Menu.create(payload);
     res.json(payload);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir añadir al menu: ${error}`);
     res.sendStatus(400);
+  }
+});
+
+//get One Menu item
+
+router.get("/oneItem/:id", async (req, res) => {
+  try {
+    const id = req.params.id;
+    const resp = await Menu.findByPk(id);
+    res.json(resp);
+  } catch (error) {
+    res.json({ error: error });
   }
 });
 
@@ -59,22 +135,64 @@ router.put("/modMenu/:id", async (req, res) => {
       precio: precio,
       vegano: vegano,
       disponible: disponible,
-    });
+    }, {where: {
+      uid: id
+    }});
     res.json({ msg: `Se ha modificado correctamente el plato: ${plato}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar el plato: ${error}`);
     res.sendStatus(400);
   }
 });
 
-//disponible toggler
-router.patch("/menuDisponible/:id", async (req, res) => {
+router.put("/modPrecio/:id", async (req, res) => {
   try {
     const id = req.params.id;
-    res.sendStatus(200);
+    const { precio } = req.body;
+    await Menu.update({ precio: precio }, { where: { uid: id } });
   } catch (error) {
-    console.error(`Error al habilitar el plato: ${error}`);
+    console.log(error);
+  }
+});
+
+//disponible toggler
+router.put("/menuDisponible/:id", async (req, res) => {
+  const id = req.params.id;
+  const { disponible } = req.body;
+  try {
+    await Menu.update(
+      {
+        disponible: disponible,
+      },
+      {
+        where: { uid: id },
+      }
+    );
+    res.send({ msg: "Se ha actualizado correctamente la disponibilidad" });
+  } catch (error) {
+    console.error(`Error al modificar disponibilidad: ${error}`);
+    res.sendStatus(400);
+  }
+});
+
+//destacar toggler
+router.put("/destacar/:id", async (req, res) => {
+  const id = req.params.id;
+  const { destacada } = req.body;
+  try {
+    Menu.update(
+      {
+        destacado: destacada,
+      },
+      {
+        where: {
+          uid: id,
+        },
+      }
+    );
+    res.send({ msg: "actualizado" });
+  } catch (error) {
+    console.error(`Error al destacar el plato: ${error}`);
     res.sendStatus(400);
   }
 });
@@ -96,22 +214,26 @@ router.delete("/delMenu/:id", async (req, res) => {
 //Categories
 router.get("/categories", async (req, res) => {
   try {
-    const resp = await Categories.findAll();
+    const resp = await Categories.findAll({ where: { delivery: true } });
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todas las categorías: ${error}`);
     res.sendStatus(400);
   }
 });
 
+//One Category
+router.get("/bycategory/:id", async (req, res) => {
+  const id = req.params.id;
+  const resp = await Menu.findAll({ where: { id_catego2: id } });
+  res.send(resp);
+});
 //add catego
-router.post("addCategory", async (req, res) => {
+router.post("/addCategory", async (req, res) => {
   try {
-    const payload = req.body;
+    const payload = req.body; 
     await Categories.create(payload);
     res.json(payload);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al añadir una categoría: ${error}`);
     res.sendStatus(400);
@@ -123,14 +245,13 @@ router.put("/editCategory/:id", async (req, res) => {
   try {
     const id = req.params.id;
     const { catego } = req.body;
-    await Categories.update(
+    await User.update(
       {
-        catego: catego,
+        id_catego2: catego,
       },
       { where: { id: id } }
     );
     res.json({ msg: "Se ha modificado correctamente la categoría" });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar una categoría: ${error}`);
     res.sendStatus(400);
@@ -145,7 +266,6 @@ router.delete("/delCategory/:id", async (req, res) => {
       where: { id: id },
     });
     res.json({ msg: "Se ha eliminado correctamente la categoría" });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al eliminar una categoría: ${error}`);
     res.sendStatus(400);
@@ -157,7 +277,6 @@ router.get("/allUsers", async (req, res) => {
   try {
     const resp = await User.findAll();
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todos los usuarios: ${error}`);
     res.sendStatus(400);
@@ -170,35 +289,33 @@ router.get("/oneUser/:id", async (req, res) => {
     const id = req.params.id;
     const resp = await User.findByPk(id);
     res.send(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir un usuario: ${error}`);
     res.sendStatus(400);
   }
 });
 
-//add user
-router.post("/register", async (req, res) => {
-  try {
-    const { name, lastname, email, password, address, zip } = req.body;
-    bcrypt.hash(password, 8).then((hash) => {
-      User.create({
-        name: name,
-        lastname: lastname,
-        email: email,
-        password: hash,
-        address: address,
-        zip: zip,
-      });
-    });
+// //add user
+// router.post("/register", async (req, res) => {
+//   try {
+//     const { name, lastname, email, password, address, zip } = req.body;
+//     bcrypt.hash(password, 8).then((hash) => {
+//       User.create({
+//         name: name,
+//         lastname: lastname,
+//         email: email,
+//         password: hash,
+//         address: address,
+//         zip: zip,
+//       });
+//     });
 
-    res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
-    res.sendStatus(200);
-  } catch (error) {
-    console.error(`Error al registrar un usuario: ${error}`);
-    res.sendStatus(400);
-  }
-});
+//     res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
+//   } catch (error) {
+//     console.error(`Error al registrar un usuario: ${error}`);
+//     res.sendStatus(400);
+//   }
+// });
 
 //Delete User
 router.delete("/delUser/:id", async (req, res) => {
@@ -206,7 +323,6 @@ router.delete("/delUser/:id", async (req, res) => {
     const id = req.params.id;
     await User.destroy({ where: { id: id } });
     res.json({ msg: `Se ha eliminado correctamente el usuario con id: ${id}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al eliminar el usuario: ${error}`);
     res.sendStatus(400);
@@ -229,37 +345,10 @@ router.put("/modUser/:id", async (req, res) => {
       { where: { id: id } }
     );
     res.json({ msg: `Se ha modificado correctamente el usuario ${name}` });
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al modificar el usuario: ${error}`);
     res.sendStatus(400);
   }
-});
-
-//login
-
-router.post("/login", async (req, res) => {
-  const { user, password } = req.body;
-  const email = await User.findOne({ where: { email: user } });
-  if (!email) {
-    res.json({
-      error: `No existe un usuario registrado con el correo ${email}`,
-    });
-    res.sendStatus(400);
-    return;
-  }
-  bcrypt.compare(password, email.password).then((match) => {
-    if (!match) {
-      res.json({ error: "Usuario y/o contraseña incorrectos" });
-      res.sendStatus(400);
-      return;
-    }
-    const token = sign(
-      { username: user.name, email: user.email, id: user.uid },
-      "n9LKWwL2u0AMphq2nuoB"
-    );
-    res.json(token);
-  });
 });
 
 //Purchases All
@@ -267,108 +356,142 @@ router.get("/purchases", async (req, res) => {
   try {
     const resp = await Purchases.findAll();
     res.json(resp);
-    res.sendStatus(200);
   } catch (error) {
     console.error(`Error al pedir todas las compras: ${error}`);
     res.sendStatus(400);
   }
 });
-//Purchases by Client
-router.get("/purchasesByClient", async (req, res) => {
+//Purchases by referencia
+router.get("/purchases/:referencia", async (req, res) => {
+  const {referencia} = req.params
   try {
+    const resp = await Purchases.findOne({where: {referencia: referencia}}
+      )
+      res.json(resp)
   } catch (error) {
     console.error(`Error al pedir todas las compras: ${error}`);
     res.sendStatus(400);
   }
 });
+//new purchase
+router.post("/neworder", async (req, res)=>{
+  const {data, number, total} = req.body
+  
+  let temp = []
+  let backprice
+  data.forEach(element => {
+    temp.push(element.precio)
+    backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
+  });
+
+  if (total === backprice) {
+   const resp = await Purchases.create({
+    referencia: number,
+    order: JSON.stringify(data),
+    total: backprice
+   })
+  
+  res.json(resp)
+}
+else {
+  res.json({error: "no coincide"})
+}
+})
+
+//complete purchase
+router.put("/complete/:referencia", async (req, res)=>{
+  const {referencia} = req.params
+  const {name, mail, completed} = req.body
+  try {
+    const resp = Purchases.update({
+      name: name,
+      mail: mail,
+      completed: completed
+    },{where: {referencia: referencia}})
+  } catch (error) {
+    res.json({error: error})
+  }
+})
+
+router.post("/sendmail", Mail.sendEmail) 
+router.post("/sendherradura", Mail.sendherradura)
 
 //admin
-router.get("/admin", async (req, res) => {
-  try {
-    res.sendStatus(200);
-  } catch (error) {
-    console.error(`Error al acceder a la sección de admin: ${error}`);
-    res.sendStatus(400);
+router.post("/admin", async (req, res) => {
+  const { email, password } = req.body;
+  if (email == "" || password == "") res.json({ error: "Faltan datos" });
+  const user = await User.findOne({ where: { email: email } });
+
+  if (!user) {
+    return res.json({ error: "usuario no existe" });
   }
+  bcrypt.compare(password, user.password).then((match) => {
+    if (!match) res.json({ error: "Usuario y / o contraseña incorrecta" });
+    if (match) {
+      console.log(`Se ha conectado ${user}`);
+      const token = sign(
+        {
+          user: User.email,
+          uid: User.uid,
+          name: User.name,
+          lastname: User.lastname,
+          address: User.address,
+          zip: User.zip,
+          admin: User.admin,
+        },
+        // process.env.NODE_ENV_SECRET
+        "DbmyStxumC"
+      );
+      res.json({ token: token, admin: user.admin });
+    }
+  });
 });
 
+//REGISTER
 
+router.post("/register", async (req, res) => {
+  const { email, password } = req.body;
+  bcrypt.hash(password, 8).then((hash) => {
+    User.create({
+      email: email,
+      password: hash,
+    });
+    res.json("Usuario creado");
+  });
+});
 
-
-// router.post("/checkout", async (req, res) => {
-//   console.log("Request:", req.body);
- 
-//   let error;
-//   let status;
-//   try {
-//     const { product, token } = req.body;
- 
-//     const customer = await stripe.customers.create({
-//       email: token.email,
-//       source: token.id,
-//     });
- 
-//     const idempotency_key = uuid();
-//     const charge = await stripe.charges.create(
-//       {
-//         amount: product.price * 100,
-//         currency: "eur",
-//         customer: customer.id,
-//         receipt_email: token.email,
-//         description: `Purchased the ${product.name}`,
-//         shipping: {
-//           name: token.card.name,
-//           address: {
-//             line1: token.card.address_line1,
-//             line2: token.card.address_line2,
-//             city: token.card.address_city,
-//             country: token.card.address_country,
-//             postal_code: token.card.address_zip,
-//           },
-//         },
-//       },
-//       {
-//         idempotency_key,
-//       }
-//     );
-//     console.log("Charge:", { charge });
-//     status = "success";
-//   } catch (error) {
-//     console.error("Error:", error);
-//     status = "failure";
-//   }
- 
-//   res.json({ error, status });
-// });
-
-
-//stripe from web
+//checks for validToken
+router.get("/auth", validateToken, (req, res) => {
+  res.json(req.user);
+});
 
 const calculateOrderAmount = (items) => {
-  // Replace this constant with a calculation of the order's amount
-  // Calculate the order total on the server to prevent
-  // people from directly manipulating the amount on the client
-  return 1400;
-};
+  let temp =[];
+ let backprice
 
+ console.log("before foreach", items)
+
+ items.items.forEach(element => {
+console.log(element)
+  temp.push(element.precio)
+  console.log("temp ", temp)
+});  
+backprice = (temp.reduce((a,b)=>a+b))*100
+backprice = (parseInt(backprice))
+console.log(backprice)
+  return backprice;
+}  
+       
 router.post("/create-payment-intent", async (req, res) => {
-  const { items } = req.body;
-
+  const items  = req.body;
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: calculateOrderAmount(items),
-    currency: "eur",
-    automatic_payment_methods: {
-      enabled: true,
-    },
+    currency: "eur"
   });
 
   res.send({
-    clientSecret: paymentIntent.client_secret,
-  });
+    clientSecret: paymentIntent.client_secret
+  }); 
 });
-
-
-
-
-module.exports = router;
+module.exports = router; 

@@ -4,6 +4,7 @@ const db = require("../Config/config");
 const Menu = db.define("Menu", {
   uid: {
     type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
   plato: {
@@ -16,7 +17,7 @@ const Menu = db.define("Menu", {
   },
   precio: {
     type: Sequelize.DOUBLE,
-    allowNull: false,
+    allowNull: false, 
   },
   vegano: {
     type: Sequelize.BOOLEAN,

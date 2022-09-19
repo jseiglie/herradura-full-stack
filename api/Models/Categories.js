@@ -10,6 +10,11 @@ const Categories = db.define("Categories", {
         type: Sequelize.STRING,
         allowNull: false,
       },
+      delivery:{
+        type: Sequelize.BOOLEAN,
+        allowNull: false,
+        defaultValue: true,
+      }
 })  
 
 module.exports = Categories 

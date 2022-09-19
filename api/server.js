@@ -1,3 +1,4 @@
+const https = require("https")
 const express = require("express");
 const app = express();
 const db = require("./Config/config");
@@ -48,3 +49,6 @@ app.listen(port, () => {
   console.log("app up on port: " + port);
 });
  
+// https.createServer(app).listen(port, ()=>{
+//   console.log("SERVER up on port: " + port);
+// })
