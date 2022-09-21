@@ -36,9 +36,33 @@ const Delivery = () => {
       setData(resp.data);
     }
   };
+
+  const suppLoad = async () =>{
+    const pizzaresp = await axios.get(`${process.env.REACT_APP_APIURL}/suppizza`)
+    sessionStorage.setItem("suppiza", JSON.stringify(pizzaresp.data)) 
+    //console.log(sessionStorage.getItem("suppiza")) 
+    const pizzavegresp = await axios.get(`${process.env.REACT_APP_APIURL}/subpizzavegana`)
+    sessionStorage.setItem("suppizaveg", JSON.stringify(pizzavegresp.data))
+    //console.log(sessionStorage.getItem("suppizaveg"))
+    const hamvegana = await axios.get(`${process.env.REACT_APP_APIURL}/hamvegana`)
+    sessionStorage.setItem("hamvegana", JSON.stringify(hamvegana.data))
+    //console.log(sessionStorage.getItem("hamvegana"))
+    const ham = await axios.get(`${process.env.REACT_APP_APIURL}/ham`)
+    sessionStorage.setItem("ham", JSON.stringify(ham.data))
+    //console.log(sessionStorage.getItem("ham"))
+    const perrito = await axios.get(`${process.env.REACT_APP_APIURL}/perrito`)
+    sessionStorage.setItem("perrito", JSON.stringify(perrito.data))
+    //console.log(sessionStorage.getItem("perrito")) 
+    const perritovegano = await axios.get(`${process.env.REACT_APP_APIURL}/perritovegano`)
+    sessionStorage.setItem("perritovegano", JSON.stringify(perritovegano.data))
+    //console.log(sessionStorage.getItem("perritovegano")) 
+  }
+
   useEffect(() => {
     loader();
+    suppLoad()  
   }, []);
+  
   useEffect(() => {
     loadCat(catego);// eslint-disable-next-line
   }, [catego]);

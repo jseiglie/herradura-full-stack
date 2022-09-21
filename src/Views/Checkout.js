@@ -6,12 +6,18 @@ import CheckoutForm from "../Components/CheckoutForm";
 import { useNavigate } from "react-router-dom";
 import SupPizza from "../Components/Suplementos/SupPizza";
 
+import Modal from "../Components/Modal/Modal";
+
 // This is your test publishable API key.
 const promise = loadStripe(
   "pk_test_51Jub2MIPsB2uwGnPRHuBviGhVXe4EpAfloWRqrilwGWsBIwCQ5P2ghkrEP7mnEvsyfVN29ANaNobqvbIpX517fQy00bObYXVug"
 );
 
 const Checkout = () => {
+  const [isModalOpen, setModalOpen] = useState(false);
+
+  const toggleModal = () => setModalOpen(!isModalOpen);
+
   const [clientSecret, setClientSecret] = useState("");
   const [details, setDetails] = useState([]);
   const [now, setNow] = useState(false);
@@ -45,7 +51,7 @@ const Checkout = () => {
       navigate("/pickup");
     }
     const temp = [JSON.parse(sessionStorage.getItem("order"))];
-    console.log("str", strobj)
+    console.log("str", strobj);
     setDetails(JSON.parse(temp[0].data.order));
     checkdb();
 
@@ -119,21 +125,106 @@ const Checkout = () => {
     );
   };
 
+  const supplementosLoad = async (id) => {
+    const resp = await axios.get(`${process.env.REACT_APP_APIURL}/suppizza`);
+
+    let supData = resp.data;
+    console.log(supData);
+    return supData.map((item) => (
+      <div>
+        {item.uid} {item.ingredient}
+      </div>
+    ));
+  };
+
   return (
     <div className="container checkout-wrapper slide-top">
       <section className="my-5">
         <h1>Revise y modifique su pedido:</h1>~ Detalles ~
-        <ul className="p-0">
-          {clean().map((item, i) => (
+        <div className="p-0">
+          {details.map((item, i) => (
             <>
-              <li className="order-details " key={item.id}>
-                {item.plato} x {amountOfItems(item.id)}
-              </li>
-              {item.id_catego2 === "1ba3995e-2476-11ed-a49a-50ebf6c32832" ? (
-                <SupPizza />
-              ) : (
-                ""
-              )}
+              <div className="card order-details d-flex" key={item.id}>
+                <div>{item.plato}</div>
+                <div>{item.precio}</div>
+                {
+                  <div
+                    style={{
+                      position: "relative",
+                      overflow: "hidden",
+                    }}
+                  >
+                    <button onClick={toggleModal}>Suplementos</button>
+
+                    <Modal isOpen={isModalOpen}>
+                      <div className="">
+                        {item.id_catego2 ===
+                        "daea62f4-25ff-11ed-a49a-50ebf6c32832"
+                          ? JSON.parse(sessionStorage.getItem("hamvegana")).map(
+                              (item) => (
+                                <div className="card">
+                                  {" "}
+                                  {console.log("hamvegana", item)} {item.plato}
+                                </div>
+                              )
+                            )
+                          : ""}
+                      </div>
+                      <div className="">
+                        {item.id_catego2 ===
+                        "48936932-25ff-11ed-a49a-50ebf6c32832"
+                          ? JSON.parse(sessionStorage.getItem("ham")).map(
+                              (item) => (
+                                <div className="card"> {item.plato}</div>
+                              )
+                            )
+                          : ""}
+                      </div>
+                      <div className="">
+                        {item.id_catego2 ===
+                        "20a52032-25fc-11ed-a49a-50ebf6c32832"
+                          ? JSON.parse(sessionStorage.getItem("perrito")).map(
+                              (item) => <div className="card">{item.plato}</div>
+                            )
+                          : ""}
+                      </div>
+                      <div className="">
+                        {item.id_catego2 ===
+                        "ab4d89c5-25fd-11ed-a49a-50ebf6c32832"
+                          ? JSON.parse(
+                              sessionStorage.getItem("perritovegano")
+                            ).map((item) => (
+                              <div className="card">{item.plato}</div>
+                            ))
+                          : ""}
+                      </div>
+                      <div className="">
+                        {item.id_catego2 ===
+                       "1ba3995e-2476-11ed-a49a-50ebf6c32832"
+                          ? JSON.parse(
+                              sessionStorage.getItem("suppiza")
+                            ).map((item) => (
+                              <div className="card">{item.plato}</div>
+                            ))
+                          : ""}
+                      </div>
+                      <div className="">
+                        {item.id_catego2 ===
+                       "c4d3f3d0-39a4-11ed-8884-50ebf6c32832"
+                          ? JSON.parse(
+                              sessionStorage.getItem("suppizaveg")
+                            ).map((item) => (
+                              <div className="card">{item.plato}</div>
+                            ))
+                          : ""}
+                      </div>
+
+
+                      <button onClick={toggleModal}>close modal</button>
+                    </Modal>
+                  </div>
+                }
+              </div>
               <span key={i} style={{ display: "none" }}>
                 {mailORder.push(item.plato + " x " + amountOfItems(item.id))}
 
@@ -141,7 +232,7 @@ const Checkout = () => {
               </span>
             </>
           ))}
-        </ul>
+        </div>
       </section>
 
       <label className="mt-5 mb-3" htmlFor="email">

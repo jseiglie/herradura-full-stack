@@ -10,7 +10,7 @@ const SuplementosPizza = db.define("SuplementosPizza", {
     type: Sequelize.STRING,
     allowNull: false,
   },
-  price: {
+  precio: {
     type: Sequelize.DOUBLE,
     allowNull: false,
   },
