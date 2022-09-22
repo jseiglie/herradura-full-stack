@@ -1,11 +1,9 @@
 const express = require("express");
 const router = express.Router();
-const db = require("../Config/config");
 const Menu = require("../Models/Menu");
 const User = require("../Models/User");
 const Purchases = require("../Models/Purchases");
 const Categories = require("../Models/Categories");
-const SuplementosPizza = require ("../Models/SuplementosPizza")
 const bcrypt = require("bcrypt");
 const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/authmiddleware");
@@ -295,28 +293,6 @@ router.get("/oneUser/:id", async (req, res) => {
   }
 });
 
-// //add user
-// router.post("/register", async (req, res) => {
-//   try {
-//     const { name, lastname, email, password, address, zip } = req.body;
-//     bcrypt.hash(password, 8).then((hash) => {
-//       User.create({
-//         name: name,
-//         lastname: lastname,
-//         email: email,
-//         password: hash,
-//         address: address,
-//         zip: zip,
-//       });
-//     });
-
-//     res.json({ msg: `Se ha añadido correctamente el usuario ${name}` });
-//   } catch (error) {
-//     console.error(`Error al registrar un usuario: ${error}`);
-//     res.sendStatus(400);
-//   }
-// });
-
 //Delete User
 router.delete("/delUser/:id", async (req, res) => {
   try {
@@ -376,21 +352,18 @@ router.get("/purchases/:referencia", async (req, res) => {
 //new purchase
 router.post("/neworder", async (req, res)=>{
   const {data, number, total} = req.body
-  
   let temp = []
   let backprice
   data.forEach(element => {
     temp.push(element.precio)
     backprice = (temp.reduce((a,b)=>a+b)).toFixed(2)
   });
-
   if (total === backprice) {
    const resp = await Purchases.create({
     referencia: number,
     order: JSON.stringify(data),
     total: backprice
    })
-  
   res.json(resp)
 }
 else {
@@ -467,18 +440,18 @@ router.get("/auth", validateToken, (req, res) => {
 
 const calculateOrderAmount = (items) => {
   let temp =[];
- let backprice
+  let backprice
 
- console.log("before foreach", items)
+ //console.log("before foreach", items)
 
  items.items.forEach(element => {
-console.log(element)
+//console.log(element)
   temp.push(element.precio)
-  console.log("temp ", temp)
+ // console.log("temp ", temp)
 });  
 backprice = (temp.reduce((a,b)=>a+b))*100
 backprice = (parseInt(backprice))
-console.log(backprice)
+//console.log(backprice)
   return backprice;
 }  
        
@@ -494,4 +467,5 @@ router.post("/create-payment-intent", async (req, res) => {
     clientSecret: paymentIntent.client_secret
   }); 
 });
+
 module.exports = router; 

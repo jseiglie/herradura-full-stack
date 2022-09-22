@@ -15,9 +15,7 @@ const promise = loadStripe(
 
 const Checkout = () => {
   const [isModalOpen, setModalOpen] = useState(false);
-
   const toggleModal = () => setModalOpen(!isModalOpen);
-
   const [clientSecret, setClientSecret] = useState("");
   const [details, setDetails] = useState([]);
   const [now, setNow] = useState(false);
@@ -41,6 +39,13 @@ const Checkout = () => {
     )
   );
   const [hideForm, setHideForm] = useState("hide");
+  const [finalOrder, setFinalOrder] = useState([...strobj]);
+
+  useEffect(() => {
+    if (finalOrder.length === 0) {
+      navigate("/pickup");
+    }
+  }, [finalOrder]);
 
   let mailORder = [];
   const navigate = useNavigate();
@@ -51,7 +56,7 @@ const Checkout = () => {
       navigate("/pickup");
     }
     const temp = [JSON.parse(sessionStorage.getItem("order"))];
-    console.log("str", strobj);
+
     setDetails(JSON.parse(temp[0].data.order));
     checkdb();
 
@@ -64,7 +69,6 @@ const Checkout = () => {
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
-    console.log(temp[0].data);
   }, []);
 
   const handleOnline = (e) => {
@@ -89,8 +93,8 @@ const Checkout = () => {
 
   const orderDetails = () => {
     let temp = []; // eslint-disable-next-line
-    clean().map((item) => {
-      temp.push(item.plato + " x " + amountOfItems(item.id));
+    details.map((item) => {
+      temp.push(item.plato);
     });
     return temp;
   };
@@ -125,16 +129,31 @@ const Checkout = () => {
     );
   };
 
-  const supplementosLoad = async (id) => {
-    const resp = await axios.get(`${process.env.REACT_APP_APIURL}/suppizza`);
+  const supAdd = (item, parentid) => {
+    const indexOfItem = finalOrder.findIndex((items) => items.id === parentid);
+    let temp = finalOrder;
+    temp.splice(indexOfItem + 1, 0, item);
+    setFinalOrder([...temp]);
+  };
 
-    let supData = resp.data;
-    console.log(supData);
-    return supData.map((item) => (
-      <div>
-        {item.uid} {item.ingredient}
-      </div>
-    ));
+  const delItem = (item) => {
+    if (item.uid) {
+      const indexOfItemUidToRemove = finalOrder.findIndex(
+        (items) => items.uid === item.uid
+      );
+      setFinalOrder([
+        ...finalOrder.slice(0, indexOfItemUidToRemove),
+        ...finalOrder.slice(indexOfItemUidToRemove + 1),
+      ]);
+    } else {
+      const indexOfItemIdToRemove = finalOrder.findIndex(
+        (items) => items.id === item.id
+      );
+      setFinalOrder([
+        ...finalOrder.slice(0, indexOfItemIdToRemove),
+        ...finalOrder.slice(indexOfItemIdToRemove + 1),
+      ]);
+    }
   };
 
   return (
@@ -142,95 +161,185 @@ const Checkout = () => {
       <section className="my-5">
         <h1>Revise y modifique su pedido:</h1>~ Detalles ~
         <div className="p-0">
-          {details.map((item, i) => (
-            <>
-              <div className="card order-details d-flex" key={item.id}>
-                <div>{item.plato}</div>
-                <div>{item.precio}</div>
-                {
-                  <div
-                    style={{
-                      position: "relative",
-                      overflow: "hidden",
-                    }}
-                  >
-                    <button onClick={toggleModal}>Suplementos</button>
+          {finalOrder.map((item, i) => (
+            <div className="card" key={i}>
+              <div className="row order-details d-flex p-3">
+                <div className="col-sm-8 col-md-8 col-lg-8">
+                  <h3>{item.plato}</h3>
+                </div>
+                <div className="col-sm-2 col-md-2 col-lg-2">
+                  <h3>{item.precio}</h3>
+                </div>
 
-                    <Modal isOpen={isModalOpen}>
-                      <div className="">
-                        {item.id_catego2 ===
-                        "daea62f4-25ff-11ed-a49a-50ebf6c32832"
-                          ? JSON.parse(sessionStorage.getItem("hamvegana")).map(
-                              (item) => (
-                                <div className="card">
-                                  {" "}
-                                  {console.log("hamvegana", item)} {item.plato}
-                                </div>
-                              )
-                            )
-                          : ""}
-                      </div>
-                      <div className="">
-                        {item.id_catego2 ===
-                        "48936932-25ff-11ed-a49a-50ebf6c32832"
-                          ? JSON.parse(sessionStorage.getItem("ham")).map(
-                              (item) => (
-                                <div className="card"> {item.plato}</div>
-                              )
-                            )
-                          : ""}
-                      </div>
-                      <div className="">
-                        {item.id_catego2 ===
-                        "20a52032-25fc-11ed-a49a-50ebf6c32832"
-                          ? JSON.parse(sessionStorage.getItem("perrito")).map(
-                              (item) => <div className="card">{item.plato}</div>
-                            )
-                          : ""}
-                      </div>
-                      <div className="">
-                        {item.id_catego2 ===
-                        "ab4d89c5-25fd-11ed-a49a-50ebf6c32832"
-                          ? JSON.parse(
-                              sessionStorage.getItem("perritovegano")
-                            ).map((item) => (
-                              <div className="card">{item.plato}</div>
-                            ))
-                          : ""}
-                      </div>
-                      <div className="">
-                        {item.id_catego2 ===
-                       "1ba3995e-2476-11ed-a49a-50ebf6c32832"
-                          ? JSON.parse(
-                              sessionStorage.getItem("suppiza")
-                            ).map((item) => (
-                              <div className="card">{item.plato}</div>
-                            ))
-                          : ""}
-                      </div>
-                      <div className="">
-                        {item.id_catego2 ===
-                       "c4d3f3d0-39a4-11ed-8884-50ebf6c32832"
-                          ? JSON.parse(
-                              sessionStorage.getItem("suppizaveg")
-                            ).map((item) => (
-                              <div className="card">{item.plato}</div>
-                            ))
-                          : ""}
-                      </div>
+                <div className="col-sm-2 col-md-2 col-lg-2">
+                  <i
+                    className="fa-regular fa-trash-can"
+                    onClick={(e) => delItem(item)}
+                  ></i>
+                </div>
 
+                <div className="container p-3">
+                  {item.id_catego2 ===
+                  "daea62f4-25ff-11ed-a49a-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
 
-                      <button onClick={toggleModal}>close modal</button>
-                    </Modal>
-                  </div>
-                }
+                      {JSON.parse(sessionStorage.getItem("hamvegana")).map(
+                        (sup) => (
+                          <div className="row d-flex p-1">
+                            <div className="col-sm-8 col-md-8 col-lg-8">
+                              <span>{sup.plato}</span>
+                            </div>
+                            <div className="col-sm-4 col-md-4 col-lg-4">
+                              <button
+                                className="btn btn-success"
+                                onClick={(e) => supAdd(sup, item.id)}
+                              >
+                                Añadir
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    ""
+                  )}
+
+                  {item.id_catego2 ===
+                  "48936932-25ff-11ed-a49a-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
+
+                      {JSON.parse(sessionStorage.getItem("ham")).map((sup) => (
+                        <div className="row d-flex p-1">
+                          <div className="col-sm-8 col-md-8 col-lg-8">
+                            <span>{sup.plato}</span>
+                          </div>
+                          <div className="col-sm-4 col-md-4 col-lg-4">
+                            <button
+                              className="btn btn-success"
+                              onClick={(e) => supAdd(sup, item.id)}
+                            >
+                              Añadir
+                            </button>
+                          </div>
+                        </div>
+                      ))}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {item.id_catego2 ===
+                  "1ba3995e-2476-11ed-a49a-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
+
+                      {JSON.parse(sessionStorage.getItem("suppizza")).map(
+                        (sup) => (
+                          <div className="row d-flex p-1">
+                            <div className="col-sm-8 col-md-8 col-lg-8">
+                              <span>{sup.plato}</span>
+                            </div>
+                            <div className="col-sm-4 col-md-4 col-lg-4">
+                              <button
+                                className="btn btn-success"
+                                onClick={(e) => supAdd(sup, item.id)}
+                              >
+                                Añadir
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {item.id_catego2 ===
+                  "20a52032-25fc-11ed-a49a-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
+
+                      {JSON.parse(sessionStorage.getItem("perrito")).map(
+                        (sup) => (
+                          <div className="row d-flex p-1">
+                            <div className="col-sm-8 col-md-8 col-lg-8">
+                              <span>{sup.plato}</span>
+                            </div>
+                            <div className="col-sm-4 col-md-4 col-lg-4">
+                              <button
+                                className="btn btn-success"
+                                onClick={(e) => supAdd(sup, item.id)}
+                              >
+                                Añadir
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {item.id_catego2 ===
+                  "ab4d89c5-25fd-11ed-a49a-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
+
+                      {JSON.parse(sessionStorage.getItem("perritovegano")).map(
+                        (sup) => (
+                          <div className="row d-flex p-1">
+                            <div className="col-sm-8 col-md-8 col-lg-8">
+                              <span>{sup.plato}</span>
+                            </div>
+                            <div className="col-sm-4 col-md-4 col-lg-4">
+                              <button
+                                className="btn btn-success"
+                                onClick={(e) => supAdd(sup, item.id)}
+                              >
+                                Añadir
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                  {item.id_catego2 ===
+                  "c4d3f3d0-39a4-11ed-8884-50ebf6c32832" ? (
+                    <>
+                      <h4>Añadir suplementos</h4>
+
+                      {JSON.parse(sessionStorage.getItem("suppizzaveg")).map(
+                        (sup) => (
+                          <div className="row d-flex p-1">
+                            <div className="col-sm-8 col-md-8 col-lg-8">
+                              <span>{sup.plato}</span>
+                            </div>
+                            <div className="col-sm-4 col-md-4 col-lg-4">
+                              <button
+                                className="btn btn-success"
+                                onClick={(e) => supAdd(sup, item.id)}
+                              >
+                                Añadir
+                              </button>
+                            </div>
+                          </div>
+                        )
+                      )}
+                    </>
+                  ) : (
+                    ""
+                  )}
+                </div>
               </div>
               <span key={i} style={{ display: "none" }}>
                 {mailORder.push(item.plato + " x " + amountOfItems(item.id))}
-
-                {console.log(item)}
               </span>
-            </>
+            </div>
           ))}
         </div>
       </section>
@@ -306,11 +415,10 @@ const Checkout = () => {
                       <h1>~Resumen~</h1>
                       Hola {name}! <br />
                       Gracias por haber elegido La Herradura Vinoteca.
-                      Encontrará los datos para recoger a continuación:{" "}
+                      Encontrará los datos para recoger a continuación:
                       <div className="checkout-destacar row d-flex">
                         <div className="col-sm-12 col-md-12 col-lg-6 col-lg-6 ">
                           <div className="order-details-wrapper">
-                            {" "}
                             ~ Detalles ~
                             <ul className="p-0">
                               {clean().map((item, i) => (

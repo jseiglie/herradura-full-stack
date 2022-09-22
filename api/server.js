@@ -4,7 +4,6 @@ const app = express();
 const db = require("./Config/config");
 const Menu = require("./Models/Menu")
 const User = require("./Models/User")
-const SuplementosPizza = require("./Models/SuplementosPizza")
 const Categories = require("./Models/Categories")
 const Purchases = require("./Models/Purchases");
 const sequelize = require("sequelize");

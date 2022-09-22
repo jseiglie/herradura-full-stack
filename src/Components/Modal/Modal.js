@@ -8,13 +8,14 @@ const modalRoot = document.getElementById("modal-root");
 const Modal = ({ isOpen, children }, props) => {
   // element to which the modal will be rendered
   const el = document.createElement("div");
-  const [data, setData] = useState([]);
-
+  el.id ="modalID"
 
   useEffect(() => {
-
     // append to root when the children of Modal are mounted
-    modalRoot.appendChild(el);
+    
+
+  modalRoot.appendChild(el)
+
 
     // do a cleanup
     return () => {
@@ -27,26 +28,28 @@ const Modal = ({ isOpen, children }, props) => {
     createPortal(
       // child element
       <div
+        id="modal_comp"
         style={{
           position: "absolute",
           top: 0,
           left: 0,
           height: "100%",
           width: "100%",
-          padding: "100px",
+          paddingTop: "100px",
           backgroundColor: "rgba(0,0,0,0.6)",
           zIndex: "9900",
         }}
       >
         <div
           style={{
-            width: "50%",
+            width: "70%",
             background: "white",
-            padding: "50px",
+            padding: "1rem",
             textAlign: "center",
+            marginLeft: "auto",
+            marginRight: "auto",
           }}
         >
-          
           {children}
         </div>
       </div>,
