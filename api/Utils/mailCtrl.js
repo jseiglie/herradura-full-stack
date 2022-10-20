@@ -5,12 +5,12 @@ const OAuth2 = google.auth.OAuth2;
 
 exports.sendEmail = async (req, res) => {
   const myOAuth2Client = new OAuth2(
-    "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
-    "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"
+    "1021350975294-gh9euoeata83oursv2c9417kcqoa7l8b.apps.googleusercontent.com",
+    "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"
   );
   myOAuth2Client.setCredentials({
     refresh_token:
-      "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
+      "1//040htGTqtyCPFCgYIARAAGAQSNwF-L9Ir4W8auRrlrxiJ1z6Y0bfRmY_U0SfKw_3nH1ur0H0NKA-q_DmksPbFZFpOBy3PVpJBmvw",
   });
   const myAccessToken = myOAuth2Client.getAccessToken();
 
@@ -26,7 +26,7 @@ exports.sendEmail = async (req, res) => {
   const toClient = {
     from: "La herradura Vinoteca",
     to: req.body.mail,
-    bcc: "herraduravinoteca@gmail.com",
+    bcc: "pedidos.laherraduravinoteca@gmail.com",
     subject: `Pedido ${req.body.referencia} realizado satisfactoriamente en La Herradura Vinoteca`,
     html: `<h1>***Resumen***</h1><p>Hola ${req.body.name? req.body.name : req.body.mail}! Se ha recibido correctamente el pedido realizado, los datos del mismo a continuación:<p/><h3>*Detalles*</h3><ul>${arr}</ul><br></br><h4>Número de referencia de su pedido: ${req.body.referencia}</h4><h4>A nombre de: ${req.body.name? req.body.name : req.body.mail}</h4><h4>Email: ${req.body.mail}</h4><h4>Total: ${req.body.total}€</h4>Agradecemos su preferencia! <br></br> La Herradura Vinoteca`,
   };
@@ -35,12 +35,12 @@ exports.sendEmail = async (req, res) => {
     service: "gmail",
     auth: {
       type: "OAUTH2",
-      user: "herraduravinoteca@gmail.com",
+      user: "pedidos.laherraduravinoteca@gmail.com",
       clientId:
-        "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
-      clientSecret: "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",
+        "1021350975294-gh9euoeata83oursv2c9417kcqoa7l8b.apps.googleusercontent.com",
+      clientSecret: "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",
       refreshToken:
-        "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
+        "1//040htGTqtyCPFCgYIARAAGAQSNwF-L9Ir4W8auRrlrxiJ1z6Y0bfRmY_U0SfKw_3nH1ur0H0NKA-q_DmksPbFZFpOBy3PVpJBmvw",
       accessToken: myAccessToken,
     },
   });
@@ -56,12 +56,12 @@ exports.sendEmail = async (req, res) => {
 
 exports.sendherradura = async (req, res) => {
   const myOAuth2Client = new OAuth2(
-    "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
-    "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"
+    "1021350975294-gh9euoeata83oursv2c9417kcqoa7l8b.apps.googleusercontent.com",
+    "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"
   );
   myOAuth2Client.setCredentials({
     refresh_token:
-      "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
+      "1//040htGTqtyCPFCgYIARAAGAQSNwF-L9Ir4W8auRrlrxiJ1z6Y0bfRmY_U0SfKw_3nH1ur0H0NKA-q_DmksPbFZFpOBy3PVpJBmvw",
   });
   const myAccessToken = myOAuth2Client.getAccessToken();
 
@@ -75,7 +75,7 @@ exports.sendherradura = async (req, res) => {
   }
   const toClient = {
     from: "La herradura Vinoteca",
-    to: "herraduravinoteca@gmail.com",
+    to: "pedidos.laherraduravinoteca@gmail.com",
     subject: `Pedido PAGADO ${req.body.referencia} realizado satisfactoriamente en La Herradura Vinoteca`,
     html: `<h3>Pedido a nombre de ${req.body.name? req.body.name : req.body.mail} para recoger en La Herradura Vinoteca</h3><p>Detalles del pedido:<p/><ul>${arr}</ul>`,
   };
@@ -84,12 +84,12 @@ exports.sendherradura = async (req, res) => {
     service: "gmail",
     auth: {
       type: "OAUTH2",
-      user: "herraduravinoteca@gmail.com",
+      user: "pedidos.laherraduravinoteca@gmail.com",
       clientId:
-        "1014243940488-u8q3i8e92hr36g6nbclgk423krs7d636.apps.googleusercontent.com",
-      clientSecret: "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",
+        "1021350975294-gh9euoeata83oursv2c9417kcqoa7l8b.apps.googleusercontent.com",
+      clientSecret: "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",
       refreshToken:
-        "1//04wiPgQo1yx_ECgYIARAAGAQSNwF-L9IrXqXDMSLFRJMZUkpJZAnSm8IAkNlewlRLhXgs8f-0UqZRD1Bz7ucJq4mpnceAJFWsJeQ",
+        "1//040htGTqtyCPFCgYIARAAGAQSNwF-L9Ir4W8auRrlrxiJ1z6Y0bfRmY_U0SfKw_3nH1ur0H0NKA-q_DmksPbFZFpOBy3PVpJBmvw",
       accessToken: myAccessToken,
     },
   });

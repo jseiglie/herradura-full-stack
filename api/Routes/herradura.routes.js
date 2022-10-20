@@ -9,7 +9,7 @@ const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/authmiddleware");
 const Mail = require("../Utils/mailCtrl")
 const stripe = require("stripe")(
-  "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
+  "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"
 );
 const { Op } = require("sequelize");
 
@@ -445,18 +445,19 @@ const calculateOrderAmount = (items) => {
  //console.log("before foreach", items)
 
  items.items.forEach(element => {
-//console.log(element)
+console.log(element)
   temp.push(element.precio)
- // console.log("temp ", temp)
+  console.log("temp ", temp)
 });  
 backprice = (temp.reduce((a,b)=>a+b))*100
 backprice = (parseInt(backprice))
-//console.log(backprice)
+console.log(backprice)
   return backprice;
 }  
        
 router.post("/create-payment-intent", async (req, res) => {
   const items  = req.body;
+  console.log(items)
   // Create a PaymentIntent with the order amount and currency
   const paymentIntent = await stripe.paymentIntents.create({
     amount: calculateOrderAmount(items),

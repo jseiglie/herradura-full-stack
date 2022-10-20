@@ -29,7 +29,7 @@ export default function CheckoutForm(props) {
   useEffect(() => {
     
     let temp = JSON.parse(sessionStorage.getItem("order"));
-    let strobj = JSON.parse(temp.data.order);
+    let strobj = props.details;
     setStripeItems(JSON.parse(temp.data.order));
     // Create PaymentIntent as soon as the page loads
     window
@@ -110,7 +110,7 @@ export default function CheckoutForm(props) {
   const orderDetails = () => {
     let temp = []// eslint-disable-next-line
     clean().map((item) => {
-      temp.push(item.plato + " x " + amountOfItems(item.id));
+      temp.push(item.plato);
     });
     return temp
   };

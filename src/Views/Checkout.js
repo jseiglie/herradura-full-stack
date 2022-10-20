@@ -4,13 +4,10 @@ import { loadStripe } from "@stripe/stripe-js";
 import { Elements } from "@stripe/react-stripe-js";
 import CheckoutForm from "../Components/CheckoutForm";
 import { useNavigate } from "react-router-dom";
-import SupPizza from "../Components/Suplementos/SupPizza";
-
-import Modal from "../Components/Modal/Modal";
 
 // This is your test publishable API key.
 const promise = loadStripe(
-  "pk_test_51Jub2MIPsB2uwGnPRHuBviGhVXe4EpAfloWRqrilwGWsBIwCQ5P2ghkrEP7mnEvsyfVN29ANaNobqvbIpX517fQy00bObYXVug"
+  "pk_live_51Jub2MIPsB2uwGnPLUxaO1WC0ktf9LHZgkPzXuc9WzuTkMUu7s1c1Pm9uJV0emhCbCnzST3maaI42yGU3tnUaAuX007hjxGwfI"
 );
 
 const Checkout = () => {
@@ -40,6 +37,8 @@ const Checkout = () => {
   );
   const [hideForm, setHideForm] = useState("hide");
   const [finalOrder, setFinalOrder] = useState([...strobj]);
+  const [EmailOk, setEmailOk] = useState(false);
+  const [emailError, setEmailError] = useState(false);
 
   useEffect(() => {
     if (finalOrder.length === 0) {
@@ -69,6 +68,7 @@ const Checkout = () => {
     })
       .then((res) => res.json())
       .then((data) => setClientSecret(data.clientSecret));
+      
   }, []);
 
   const handleOnline = (e) => {
@@ -84,7 +84,7 @@ const Checkout = () => {
   };
 
   const clean = () => {
-    const uniqueSet = new Set(details.map(JSON.stringify));
+    const uniqueSet = new Set(finalOrder.map(JSON.stringify));
     const result = Array.from(uniqueSet).map(JSON.parse);
     return result;
   };
@@ -93,7 +93,7 @@ const Checkout = () => {
 
   const orderDetails = () => {
     let temp = []; // eslint-disable-next-line
-    details.map((item) => {
+    finalOrder.map((item) => {
       temp.push(item.plato);
     });
     return temp;
@@ -115,7 +115,15 @@ const Checkout = () => {
       referencia: referencia,
     };
     try {
-      await axios.post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts);
+      await axios
+        .post(`${process.env.REACT_APP_APIURL}/sendmail`, mailOpts)
+        .then((resp) => {
+          if (resp.statusText === "OK") {
+            setEmailOk(true);
+          } else {
+            setEmailError(true);
+          }
+        });
       await axios.put(
         `${process.env.REACT_APP_APIURL}/complete/${referencia}`,
         values
@@ -134,6 +142,13 @@ const Checkout = () => {
     let temp = finalOrder;
     temp.splice(indexOfItem + 1, 0, item);
     setFinalOrder([...temp]);
+    
+    let tempTotal = []
+  finalOrder.forEach(element => {
+    tempTotal.push(element.precio)
+    setTotal(tempTotal.reduce((a,b)=>a+b).toFixed(2))
+  });
+  console.log(total)
   };
 
   const delItem = (item) => {
@@ -144,7 +159,13 @@ const Checkout = () => {
       setFinalOrder([
         ...finalOrder.slice(0, indexOfItemUidToRemove),
         ...finalOrder.slice(indexOfItemUidToRemove + 1),
-      ]);
+      ]); 
+      let tempTotal = []
+      finalOrder.forEach(element => {
+        tempTotal.push(element.precio)
+        setTotal(tempTotal.reduce((a,b)=>a+b).toFixed(2))
+        console.log(total)
+    })     
     } else {
       const indexOfItemIdToRemove = finalOrder.findIndex(
         (items) => items.id === item.id
@@ -153,9 +174,16 @@ const Checkout = () => {
         ...finalOrder.slice(0, indexOfItemIdToRemove),
         ...finalOrder.slice(indexOfItemIdToRemove + 1),
       ]);
+      let tempTotal = []
+      finalOrder.forEach(element => {
+        tempTotal.push(element.precio)
+        setTotal(tempTotal.reduce((a,b)=>a+b).toFixed(2))
+        console.log(total)
+    })
     }
-  };
 
+   
+  }
   return (
     <div className="container checkout-wrapper slide-top">
       <section className="my-5">
@@ -386,7 +414,7 @@ const Checkout = () => {
               <CheckoutForm
                 email={email}
                 name={name}
-                details={details}
+                details={finalOrder}
                 total={total}
               />
             </Elements>
@@ -423,15 +451,11 @@ const Checkout = () => {
                             <ul className="p-0">
                               {clean().map((item, i) => (
                                 <>
-                                  <li className="order-details " key={item.id}>
-                                    {item.plato} x {amountOfItems(item.id)}
+                                  <li className="order-details" key={item.id}>
+                                    {item.plato}
                                   </li>
                                   <span key={i} style={{ display: "none" }}>
-                                    {mailORder.push(
-                                      item.plato +
-                                        " x " +
-                                        amountOfItems(item.id)
-                                    )}
+                                    {mailORder.push(item.plato)}
                                   </span>
                                 </>
                               ))}
@@ -452,6 +476,24 @@ const Checkout = () => {
                         type="submit"
                         value="Confirmar pedido"
                       />
+                      {EmailOk ? (
+                        <div className="bg-success p-3 m-3">
+                          Se ha enviado un correo satisfactoriamente a la
+                          direccion {email} con los datos para la recogida del
+                          pedido.
+                        </div>
+                      ) : (
+                        ""
+                      )}
+                      {emailError ? (
+                        <div className="bg-danger p-3 m-3">
+                          Hubo un problema al enviar el correo, le pedimos que
+                          lo vuelva a intentar y de mantenerse el problema,
+                          guarde los datos para que pueda recoger su pedido
+                        </div>
+                      ) : (
+                        ""
+                      )}
                     </>
                   ) : (
                     <div className="checkout-space"></div>
