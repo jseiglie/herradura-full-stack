@@ -1,5 +1,5 @@
 
-import React, { useEffect, useState } from "react";
+import React from "react";
 
 const News = () => {
  
@@ -64,11 +64,6 @@ const News = () => {
 ]
 
 
-const handleClick=(e) =>{
-
-  console.log(e.target.id)
-
-}
 
   return (
     <section id="news">
@@ -79,7 +74,7 @@ const handleClick=(e) =>{
             
               <div className="card news-card">
                 <div className="card-body news-body" >
-                  <div className="container recuadro" value={item.uid} id={item.uid} onClick={e=>handleClick(e)}>
+                  <div className="container recuadro" value={item.uid}>
                     <span className="dienesis-L">~</span>
                     <img
                       src="./img/herradura_logo.webp"

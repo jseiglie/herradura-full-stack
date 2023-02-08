@@ -33,6 +33,7 @@ const About = () => {
           </div>
           <div className="col-lg-8 col-md-12 col-sm1-2">
             <iframe
+            title="GoogleMap"
               className="about_Map"
               loading="lazy"
               allowFullScreen
