@@ -9,9 +9,11 @@ const About = () => {
 
           <div className="col-lg-4 col-md-12 col-sm1-2 about_Text">
             <p>
-              Un magnifico rincón de encuentro para todas las personas que
-              diariamente comparten un ratito de ocio, buen ambiente y amistad
-              en La Herradura.
+              Un magnífico rincón de encuentro para todas las personas que
+              diariamente comparten un momento de ocio, disfrutando
+              independientemente de tus preferencias a nivel gastronómico desde
+              la cocina tradicional, fastfood o comida vegana, el mejor
+              ambiente en La Herradura.
             </p>
             <div className="about_Info">
               <i className="fa-solid fa-location-dot"></i> Paseo de Extremadura

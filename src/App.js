@@ -3,11 +3,7 @@ import { BrowserRouter } from "react-router-dom";
 import FooterH from "./Components/FooterH";
 import NavBar from "./Components/NavBar";
 import "./Styles/App.css";
-import Admin from "./Views/Admin";
-import Checkout from "./Views/Checkout";
-import Dashboard from "./Views/Dashboard";
-import Delivery from "./Views/Delivery";
-import Edit from "./Views/Edit";
+
 import Home from "./Views/Home";
 import Menu from "./Views/Menu";
 
@@ -19,12 +15,6 @@ function App() {
         <Routes>
           <Route path="/" element={<Home />} />
           <Route path="/menu" element={<Menu />} />
-          <Route path="/delivery" element={<Delivery />} />
-          <Route path="/checkout" element={<Checkout />} />
-          <Route path="/admin" element={<Admin />} />
-          <Route path="/dashboard" element={<Dashboard />} />
-          <Route path="/edit/:id" element={<Edit/>}/>
-          <Route path="/add" element={<Edit/>}/>
           <Route path="*" element={<h1>Not Found</h1>} />
         </Routes>
       </BrowserRouter>

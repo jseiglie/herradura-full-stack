@@ -1,19 +1,8 @@
-import axios from "axios";
+
 import React, { useEffect, useState } from "react";
 
 const News = () => {
-  // const [data, setData] = useState([]);
-  const url = process.env.REACT_APP_APIURL;
-
-  // const getData = async () => {
-  //   const resp = await axios.get(`${url}/destacados`);
-  //   setData(resp.data);
-  //   console.log(resp.data)
-  // };
-
-  // useEffect(() => {
-  //   getData();
-  // }, []);
+ 
 
   const data = [
     {
