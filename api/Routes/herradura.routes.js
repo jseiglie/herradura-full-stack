@@ -11,7 +11,7 @@ const { sign } = require("jsonwebtoken");
 const { validateToken } = require("../middlewares/authmiddleware");
 const Mail = require("../Utils/mailCtrl")
 const stripe = require("stripe")(
-  "sk_test_51Jub2MIPsB2uwGnPOurLHKAxmB74El9WIV0njLJ0DvE0tFHBXWZSgFcX0Qby5eldGpv0WLWU2ugTaiCYuEUdn3kJ006iBSaVDp"
+  "" // insert secret
 );
 const { Op } = require("sequelize");
 
