@@ -33,7 +33,7 @@ const About = () => {
               className="about_Map"
               loading="lazy"
               allowFullScreen
-              src="https://www.google.com/maps/embed/v1/place?q=Paseo%20de%20Extremadura%20117%2C%20Madrid%2C%20Espa%C3%B1a&key=AIzaSyDkeXnu-dRlLYlej8q_5ITFv8Ywb1q5ctA"
+              src="https://www.google.com/maps/embed/v1/place?q=Paseo%20de%20Extremadura%20117%2C%20Madrid%2C%20Espa%C3%B1a&key=" // insert key
             ></iframe>
           </div>
           <div className="col-lg-6 col-md-6 col-sm1-2"></div>
